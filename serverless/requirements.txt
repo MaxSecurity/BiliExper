@@ -1,0 +1,3 @@
+aiohttp==3.7.4
+idna_ssl==1.1.0
+json5==0.9.5

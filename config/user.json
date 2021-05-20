@@ -1,0 +1,15 @@
+// 此文件仅用于漫画下载，视频稿件上传下载等功能的账户cookie配置
+// windows上请把本文件放到程序执行目录，linux上可以放到/etc/BiliExp/user.json
+// 读取带注释的json文件需要提前安装json5模块，否则请提前删除所有注释
+{
+    "SESSDATA": "",        // 网页端cookie
+    "bili_jct": "",        // 网页端cookie
+    "access_token": "",    // APP端登录令牌
+    "refresh_token": "",   // APP端刷新令牌
+    "username": "",        // 账户名
+    "password": ""         // 账户密码
+}
+// 漫画视频下载只填写网页端SESSDATA，cookie获取方法参见项目主页，也可不填写直接使用账户密码
+// 视频上传只需要填写APP端access_token，也可不填写直接使用账户密码
+// username和password为账号和密码，如果不知道前面的参数怎么获取可以直接使用账号密码登录
+// 为避免每次使用账号密码登录，每次登录后登录状态会缓存在此文件，请务必给予可写权限

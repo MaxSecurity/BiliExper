@@ -1,0 +1,3 @@
+aiohttp==3.7.4
+json5==0.9.5
+wasmtime==0.21.0

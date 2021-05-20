@@ -1,0 +1,6 @@
+requests==2.20.0
+aiohttp==3.7.4
+json5==0.9.5
+wasmtime==0.21.0
+rsa==4.6
+PyMuPDF==1.17.6

@@ -1,0 +1,22 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  BiliExp:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: 'B站自动操作脚本'
+    
+    BiliExp:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: BiliExp.main
+        Runtime: python3
+        CodeUri: ./
+        Description: 'B站自动操作脚本'
+        Timeout: 900
+      Events:
+        Timer:
+          Type: Timer
+          Properties:
+            CronExpression: '0 0 4 * * *' #换成东八区为中午12点
+            Enable: true
