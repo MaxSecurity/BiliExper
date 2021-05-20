@@ -11,7 +11,7 @@ BiliExp
 
 | ↳ Stargazers | ↳ Forkers |
 |  :---:  | :---:  |
-| [![Stargazers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/stars/MaxSecurity/BiliExper/)](https://github.com/MaxSecurity/BiliExper/stargazers)  | [![Forkers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/forks/MaxSecurity/BiliExper)](https://github.com/MaxSecurity/BiliExper/network/members) |
+| [![Stargazers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/stars/MaxSecurity/BiliExper)](https://github.com/MaxSecurity/BiliExper/stargazers)  | [![Forkers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/forks/MaxSecurity/BiliExper)](https://github.com/MaxSecurity/BiliExper/network/members) |
 
 # 项目说明
 
