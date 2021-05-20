@@ -3,8 +3,16 @@
 BiliExp
 </h1>
 
-![image](https://user-images.githubusercontent.com/67217225/96542531-d6bcdb80-12d4-11eb-81e1-49f3d3b85dfe.png)
 <br>
+<br>
+<br>
+
+</div>
+
+| ↳ Stargazers | ↳ Forkers |
+|  :---:  | :---:  |
+| [![Stargazers repo roster for @happy888888/BiliExp](https://reporoster.com/stars/happy888888/BiliExp)](https://github.com/happy888888/BiliExp/stargazers)  | [![Forkers repo roster for @happy888888/BiliExp](https://reporoster.com/forks/happy888888/BiliExp)](https://github.com/happy888888/BiliExp/network/members) |
+
 # 项目说明
 
 本项目为bilibili(哔哩哔哩,以下简称B站)助手，涵盖了B站视频主站，直播，漫画等领域，提供B站自动化养号(服务器挂机,多账户)，视频音频漫画下载，视频专栏音乐投稿等工具集，方便大家更好地使用B站。如果您对本项目有新的建议，想在本项目上添加新的功能，欢迎贡献你的想法，帮助本项目更好地发展。
