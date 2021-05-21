@@ -1,6 +1,7 @@
 <div align="center"> 
 <h1 align="center">
 BiliExp
+原作者：https://github.com/happy888888 此项目只是备份，不存在Actione服务，不定时更新其他的等，建议大家还是用腾讯云函数操作。
 </h1>
 
 <br>
