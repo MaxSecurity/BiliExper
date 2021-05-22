@@ -20,10 +20,10 @@ BiliExp
 
 </br>[转至目录快速使用](#目录)
 ## 下载直接运行操作：
-####1.直接下载下来安装运行 python3 BiliExp.py 只要不关闭程序程序就会每一个小时运行一次(也可以定时某个时间运行一次 我把代码注释在里面需要的自行修改)。
-####2.如果python3 BiliExp.py 运行错误 请运行 pip3 install -r requirements.txt 安装模块即可。
-####3.事先修改config文件夹中的config.json 文件添加上你们的 账号信息Key推送Key信息。
-####4.然后感谢happy888888作者开发了此套程序 @happy888888 老哥把快把Actione服务删除重新上架吧。
+#### 1.直接下载下来安装运行 python3 BiliExp.py 只要不关闭程序程序就会每一个小时运行一次(也可以定时某个时间运行一次 我把代码注释在里面需要的自行修改)。
+#### 2.如果python3 BiliExp.py 运行错误 请运行 pip3 install -r requirements.txt 安装模块即可。
+#### 3.事先修改config文件夹中的config.json 文件添加上你们的 账号信息Key推送Key信息。
+#### 4.然后感谢happy888888作者开发了此套程序 @happy888888 老哥把快把Actione服务删除重新上架吧。
 
 
 ## 主要功能
