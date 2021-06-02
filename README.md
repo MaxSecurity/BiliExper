@@ -4,6 +4,14 @@ BiliExp
 原作者：https://github.com/happy888888 此项目只是备份和自己修改，不存在Actione服务，不定时更新其他的等，建议大家还是用腾讯云函数或者服务器等操作运行。求Star！！！
 </h1>
 
+
+Actions功能此项目不支持，原项目就是因为Actions导致项目被封的。
+请不要滥用相关 API，让我们一起爱护 B 站 ❤
+
+请各位务必遵守 Github 服务条款。不要滥用 Actions 工作流。
+
+Please be sure to abide by the Github terms of service. Don’t abuse the Actions workflow.
+
 <br>
 <br>
 <br>
