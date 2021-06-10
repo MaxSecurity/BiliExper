@@ -181,7 +181,9 @@ def main(*args, **kwargs):
         tasks = get_arg_tasks(video_parser, kwargs["tasklist"])
     else:
         tasks = get_input_tasks(video_parser)
+
     del video_parser
+    del biliapi
 
     if kwargs["ass"]:
         download_danmu(tasks, kwargs["path"])
@@ -214,7 +216,7 @@ if __name__=="__main__":
             print(' -h --help      显示帮助信息')
             exit()
         elif opt in ('-V','--version'):
-            print('B站视频下载器 videoDownloader v1.2.0')
+            print('B站视频下载器 videoDownloader v1.2.1')
             exit()
         elif opt in ('-p','--path'):
             kwargs["path"] = arg.replace(r'\\', '/')

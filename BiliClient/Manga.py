@@ -3,7 +3,7 @@ __all__ = (
     'MangaDownloader',
 )
 
-from . import bili
+from . import bili, biliContext
 from requests.sessions import Session
 from typing import Iterable, Generator, List, Union, Dict, Any
 import os, re
@@ -26,25 +26,21 @@ class DownloadResult(object):
         self.title = title
         self.name = name
 
-class MangaDownloader(object):
+class MangaDownloader(biliContext):
     '''B站漫画下载类'''
 
     DownloadCode = DownloadCode
-    login_by_cookie = bili.login_by_cookie
-    login_by_access_token = bili.login_by_access_token
-    login_by_password = bili.login_by_password
-    access_token = bili.access_token
-    refresh_token = bili.refresh_token
-    SESSDATA = bili.SESSDATA
-    bili_jct = bili.bili_jct
 
     def __init__(self, 
+                 biliapi: bili = None,
                  comic_id: int = 0
                  ):
         '''
+        biliapi     bili  B站接口对象实例
         comic_id    int   漫画id
         '''
-        bili.__init__(self)
+        super(MangaDownloader, self).__init__(biliapi)
+
         if comic_id:
             self.setComicId(comic_id)
         else:
@@ -55,7 +51,7 @@ class MangaDownloader(object):
         设置当前漫画id
         comic_id    int   漫画id
         '''
-        self._manga_detail = bili.mangaDetail(self, comic_id)["data"]
+        self._manga_detail = self._api.mangaDetail(comic_id)["data"]
         self._comic_id = self._manga_detail["id"]
         self._manga_detail["ep_list"].sort(key=lambda elem: elem["ord"])
         self._chapters = {x["id"]:x for x in self._manga_detail["chapters"]}
@@ -87,9 +83,9 @@ class MangaDownloader(object):
         获取漫画章节中所有图片的真实url
         ep_id  int  章节id
         '''
-        data = bili.mangaImageIndex(self, ep_id)["data"]["images"]   #获取一个章节的所有图片网址
+        data = self._api.mangaImageIndex(ep_id)["data"]["images"]   #获取一个章节的所有图片网址
         url_list = [x["path"] for x in data]
-        data = bili.mangaImageToken(self, url_list)["data"]          #通过图片网址获得图片token
+        data = self._api.mangaImageToken(url_list)["data"]          #通过图片网址获得图片token
         return [f'{x["url"]}?token={x["token"]}' for x in data]      #将图片网址和token拼接在一起组合成真实网址
 
     def _isLocked(self, ep_data: Dict[str, Any]) -> bool:
@@ -119,7 +115,7 @@ class MangaDownloader(object):
 
         for ii in range(len(_list)):
             with open(os.path.join(path, f'{ii+1:0>2}.jpg'), 'wb') as f:
-                f.write(self._session.get(_list[ii]).content)
+                f.write(self._api._session.get(_list[ii]).content)
 
     def downloadIndexes(self, 
                         index: Union[int, Iterable[int]], 

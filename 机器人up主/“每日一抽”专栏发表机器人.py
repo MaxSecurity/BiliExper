@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from BiliClient import bili
 from BiliClient import Article
-import time, json, re
+import time
+try:
+    from json5 import load
+except:
+    from json import load
 
 # 本程序为B站专栏机器人，可以收集整理动态中一段时间内的抽奖消息，并整理
 # 后发布到B站专栏中，效果看例子 https://www.bilibili.com/read/cv7055733
@@ -55,7 +59,7 @@ def listLott(cookie, endTime, startTime):
 
 def buildContent(article, list):
     "编写专题文章正文"
-    content = Article.Content() #创建content类写文章正文
+    content = article.Content() #创建content类写文章正文
     content.br()\
         .picUrl("//i0.hdslb.com/bfs/article/d74e83cf96a9028eb3e280d5f877dce53760a7e2.jpg", width="640", height="400") #插入图片
 
@@ -75,19 +79,16 @@ def buildContent(article, list):
                 content.picUrl(y[2], y[0], "30%", "30%") #如果抽奖有图片就插入图片,长宽为30%
             ii += 1
 
-    return content
-
 def main(*args):
     with open('config/config.json','r',encoding='utf-8') as fp:
-        configData = json.loads(re.sub(r'\/\*[\s\S]*?\/', '', fp.read()))
+        configData = load(fp)
 
     now_time = int(time.time())
     endtime = now_time - now_time % 86400 + time.timezone #今天0点
     starttime = endtime - 86400 #昨天0点
     list = listLott(configData["users"][0]["cookieDatas"], endtime, starttime) #返回自己动态里从starttime到endtime的所有抽奖信息
     article = Article(configData["users"][0]["cookieDatas"], "互动抽奖系列--每日一抽") #创建B站专栏,并设置标题
-    content = buildContent(article, list) #创建文章内容
-    article.setContent(content) #将文章内容保存至专栏
+    buildContent(article, list) #创建文章内容
 
     article.setImage("//i0.hdslb.com/bfs/article/d74e83cf96a9028eb3e280d5f877dce53760a7e2.jpg","//i0.hdslb.com/bfs/article/05dd9f784a5426b59a85ba33cf0c9a13cab521be.jpg")
                 #设置缩略图,本地图片请用article.articleUpcover()方法转换为链接

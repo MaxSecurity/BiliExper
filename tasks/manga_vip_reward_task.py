@@ -1,11 +1,11 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
-from .import_once import taday
-import logging
+import logging, time
 
 async def manga_vip_reward_task(biliapi: asyncbili,
                                 task_config: dict
                                 ) -> None:
+    taday = time.localtime(time.time() + 28800 + time.timezone).tm_mday
     if not taday in task_config["days"]:
         return
     try:

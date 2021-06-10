@@ -1,6 +1,6 @@
-# python实现B站发布专栏、视频和音频的方法
+# python实现B站发布专栏、动态、视频和音频的方法
 
-这里是使用python发布B站专栏、视频和音频的方法，并带有3个例子和详细说明。
+这里是使用python发布B站专栏、动态、视频和音频的方法，并带有4个例子和详细说明。
 
 # 目录
 
@@ -18,6 +18,7 @@
   - [添加引用标签](#在专栏草稿上添加一个引用标签)
   - [添加投票](#在专栏草稿上添加一个投票)
   - [设置专栏信息](#设置专栏除内容外的详细信息)
+- [发布动态](#发布动态)
 - [发布视频稿件](#发布视频稿件)
 - [发布音频稿件](#发布音频稿件)
   - [发布一个单曲音频稿件](#发布一个单曲音频稿件)
@@ -63,11 +64,10 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏") #创建一个测试专栏
 
-content = Article.Content() #创建一个专栏内容
+content = article.Content() #创建一个专栏内容
 content.startP().add('测试内容').endP()
 # 开始一个段落   添加文字    结束一个段落
 
-article.setContent(content) #将内容设置到专栏上
 article.save() #保存内容至草稿箱，然后可以去B站专栏草稿箱看到
 ```
 执行上面代码后，就创建了一个标题为"测试专栏"，内容为"测试内容"的专栏</br>
@@ -89,7 +89,7 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏") #创建一个测试专栏
 
-content = Article.Content() #创建一个专栏内容
+content = article.Content() #创建一个专栏内容
 content.startH().add("测试标题").endH()
 #     标题开始      添加文字      标题结束
 content.startP().add('测试内容').endP()
@@ -101,7 +101,6 @@ content.br() #换行，切换到下一行
 content.startP().add('第三行测试内容：').startD().add('这里是下划线字体').endD().endP()
 #      段落开始      添加文字             删除线开始      添加内容   删除线结束  段落结束
 
-article.setContent(content) #将内容设置到专栏上
 article.save() #保存内容至草稿箱，然后可以去B站专栏草稿箱看到
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99682493-3a941900-2aba-11eb-98c7-1398fdf00c30.png)
@@ -123,12 +122,11 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.Content()
 content.startH().add("测试标题").endH()
 content.startP().add('测试不同大小文字：').startS(12).add('小号字体').endS().startS(16).add('标准字体').endS().startS(20).add('大号字体').endS().startS(23).add('特大字体').endS().endP()
 content.startP().add('测试引用内容：').startY().add('这里是引用内容').endY().endP()
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99684649-a6778100-2abc-11eb-906d-627e8ced29d5.png)
@@ -147,7 +145,7 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.Content()
 content.startH().add("测试标题").endH()
 content.startP().add("测试有序列表").endP()
 content.startO()
@@ -158,7 +156,6 @@ content.endO()
 content.startP().add("测试无序列表").endP()
 content.startU().startL().add('列表1').endL().startL().add('列表2').endL().startL().add('列表3').endL().endU()
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99686845-f48d8400-2abe-11eb-8a92-6fd00fbce140.png)
@@ -177,11 +174,10 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.Content()
 content.startH().add("测试标题").endH()
 content.startP().add("测试超链接").startA("https://www.bilibili.com/video/BV12z4y1y72W").add("点击跳转到视频").endA().endP()
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99687914-26ebb100-2ac0-11eb-8c86-2a5286161fca.png)
@@ -199,7 +195,7 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.Content()
 content.startH().add("测试标题").endH()
 content.startP().add("测试B站站内图片链接").endP()
 content.picUrl("https://i0.hdslb.com/bfs/article/d74e83cf96a9028eb3e280d5f877dce53760a7e2.jpg@1280w_800h.webp", "测试链接图片", "300px", "200px")
@@ -208,7 +204,6 @@ fp = open("E:\mydocument\desktop\下载.png", "rb")
 content.picFile(article, fp, "测试本地图片", "50%", "50%")
 fp.close()
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99689295-c8273700-2ac1-11eb-8029-b6086b665ecb.png)
@@ -227,24 +222,23 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.content()
 content.startH().add("测试标题").endH()
 content.startP().add("添加一个视频引用").endP()
-content.card(article, "BV1sA411x77G", "video")
+content.card("BV1sA411x77G", "video")
 content.startP().add("添加一个专栏引用").endP()
-content.card(article, "cv8425507", "article")
+content.card("cv8425507", "article")
 content.startP().add("添加一个番剧引用").endP()
-content.card(article, "ss34714", "fanju")
+content.card("ss34714", "fanju")
 content.startP().add("添加一个音乐引用").endP()
-content.card(article, "au1669670", "music")
+content.card("au1669670", "music")
 content.startP().add("添加一个会员购引用").endP()
-content.card(article, "pw30563", "shop")
+content.card("pw30563", "shop")
 content.startP().add("添加一个漫画引用").endP()
-content.card(article, "28951", "caricature")
+content.card("28951", "caricature")
 content.startP().add("添加一个直播引用").endP()
-content.card(article, "lv22321043", "live")
+content.card("lv22321043", "live")
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99697307-98306180-2aca-11eb-9da5-91c97715a822.png)
@@ -262,7 +256,7 @@ cookies = { #这里是账号登录后获得的cookie
 
 article = Article(cookies, "测试专栏")
 
-content = Article.Content()
+content = article.Content()
 content.startH().add("测试标题").endH()
 content.startP().add("添加一个投票").endP()
 vote = {
@@ -284,9 +278,8 @@ vote = {
         }
         ]
     }
-content.vote(article, vote) #增加一个投票
+content.vote(vote) #增加一个投票
 
-article.setContent(content)
 article.save()
 ```
 ![image](https://user-images.githubusercontent.com/67217225/99760914-ceec9300-2b2f-11eb-845e-3e82f752a08e.png)
@@ -325,10 +318,57 @@ setListId()设置专栏所属于的文集，需要提供一个整数的文集编
 setOriginal()设置专栏是否属于原创，1为原创，2为非原创 </br>
 submit() 立即发布专栏，save()只是保存到草稿箱，必须先save()再submit() </br>
 
+## 发布动态
+这个例子将创建一个B站带图片和投票的动态
+```
+from BiliClient import Dynamic
+
+cookies = { #这里是账号登录后获得的cookie
+    "SESSDATA": "4a5f1c63%2C1617173721%2Cdf9fc*a1",
+    "bili_jct": "cf28bac01cd7d443646907a5c4da8cf1",
+    }
+
+dynamic = Dynamic(cookies)
+
+content = dynamic.Content()
+
+content.add("这是一个测试动态----测试@别人").at('超级抽奖王', 203984353) #at推荐带uid，如果只有用户名搜索出来的uid可能不正确
+
+content.add("测试添加一个测试话题").add(" #测试# ")
+
+content.add("测试添加一个投票")
+vote = {
+    "title": "投票标题",
+    "desc": "投票说明",
+    "type": 0, #0为文字投票，1为图片投票
+    "duration": 604800,#投票时长秒,604800为一个星期，即一个星期后停止投票
+    "choice_cnt": 1, #最多选择几个，选项个数上限由下面options内选项个数决定，1为最多选择一个
+    "options": [
+        {
+            "desc": "选项1",
+            "cnt": 0,
+            "idx": 1 #选项序号，第一个选项为1
+        },
+        {
+            "desc": "选项2",
+            "cnt": 0,
+            "idx": 2 #选项序号，第二个选项为2，以此类推更多选项
+        }
+        ]
+    }
+content.vote(vote, "投票标题") #注意投票标题最多3个字，否则只会有前3个字变成蓝色，参考下图
+
+content.add("测试添加图片")
+content.picFile(r'E:\mydocument\desktop\njbnjbj.jpg') #注意图片在任何位置添加实际上都在动态末尾
+
+dynamic.submit() #提交动态
+```
+![image](https://user-images.githubusercontent.com/67217225/112724884-5fa90480-8f50-11eb-8016-8587c51bbc89.png)
+
 ## 发布视频稿件
 这个例子将本地文件`E:\测试视频.mp4`上传，将标题设置为"测试视频"，视频类型为转载，添加"搞笑"标签并把分区设置为 "生活，其他分区"
 ```
-from BiliClient import VideoUploader
+from BiliClient import VideoUploaderWeb as VideoUploader
 import time
 
 cookies = { #这里是账号登录后获得的cookie
@@ -345,7 +385,7 @@ if not upvideo:  #这里判断视频是否上传成功
     print("上传失败")
     exit(0)
 
-video_uploader.add(upvideo) #添加上面上传的视频到视频发布任务，可以一次发布多个视频(分P)
+video_uploader.add(upvideo) #添加上面上传的视频到视频发布任务，一次发布多个视频(分P)需要使用VideoUploaderApp类而不是VideoUploaderWeb
 
 video_uploader.setCopyright(2) #这个视频稿件是转载的
 # video_uploader.setCopyright(1) #这个视频稿件是原创的
@@ -456,12 +496,13 @@ else:
     *  从动态中收集从昨天(0点)到今天(0点)的所有抽奖动态，整理后发表到专栏
     *  效果看我的B站专栏“每日一抽”系列 https://www.bilibili.com/read/cv7055733
 
+* “随机图片”动态发布机器人
+    *  从随机图片接口中下载张图片发布到动态
 
 * “每日美图”专栏发表机器人
     *  从P站主页爬取一些图片，整理后发表到专栏
     *  有的图片无法通过审核
     *  效果看我的B站专栏“每日美图”系列 https://www.bilibili.com/read/cv7061587
-
 
 * youtube视频搬运工
     *  利用pytube库下载youtube视频并转载到B站

@@ -1,11 +1,10 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
-from .import_once import get_ids
 import logging
 
 async def share_task(biliapi: asyncbili) -> None:
     try:
-        ret = await get_ids(biliapi)
+        ret = await biliapi.getRegions(27, 15)
     except Exception as e:
         logging.warning(f'{biliapi.name}: 获取B站分区视频信息异常，原因为{str(e)}，跳过视频分享')
         webhook.addMsg('msg_simple', f'{biliapi.name}:视频分享失败\n')

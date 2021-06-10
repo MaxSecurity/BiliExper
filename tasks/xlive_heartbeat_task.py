@@ -1,10 +1,10 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
 import logging, uuid
-from asyncio import TimeoutError, sleep, wait
+from asyncio import TimeoutError, sleep, wait, ensure_future
 from concurrent.futures import CancelledError
 from async_timeout import timeout
-from typing import Awaitable, AsyncGenerator, Tuple, Union, List
+from typing import Awaitable, AsyncGenerator, Tuple, Union, List, Iterator
 
 async def xlive_heartbeat_task(biliapi: asyncbili,
                                task_config: dict
@@ -13,6 +13,7 @@ async def xlive_heartbeat_task(biliapi: asyncbili,
     send_msg = task_config.get("send_msg", "")
     medal_room = task_config.get("medal_room", True)
     rooms_id = set(task_config.get("room_id", []))
+    live_status = task_config.get("live_status", [0, 1])
     tasks = []
     rooms = await get_rooms(biliapi)
     if send_msg:
@@ -21,10 +22,10 @@ async def xlive_heartbeat_task(biliapi: asyncbili,
     if medal_room:
         rooms_id |= set(rooms)
 
-    tasks.extend([heartbeat_task(biliapi, x, timeout) for x in rooms_id])
+    tasks.extend([heartbeat_task(biliapi, x, timeout, live_status) for x in rooms_id])
 
     if tasks:
-        await wait(tasks)
+        await wait(map(ensure_future, tasks))
 
 async def get_rooms(biliapi: asyncbili) -> Awaitable[List[int]]:
     '''获取所有勋章房间'''
@@ -91,21 +92,25 @@ async def send_msg_task(biliapi: asyncbili,
 
 async def heartbeat_task(biliapi: asyncbili,
                          room_id: int,
-                         max_time: Union[int, float]
+                         max_time: Union[int, float],
+                         live_status: Iterator[int]
                          ) -> Awaitable:
     try:
         ret = await biliapi.xliveGetRoomInfo(room_id)
-        if ret["code"] != 0:
-            logging.info(f'{biliapi.name}: 直播请求房间信息失败，信息为：{ret["message"]}，跳过直播心跳')
-            webhook.addMsg('msg_simple', f'{biliapi.name}:直播心跳失败\n')
-            return
-        parent_area_id = ret["data"]["room_info"]["parent_area_id"]
-        area_id = ret["data"]["room_info"]["area_id"]
-        room_id = ret["data"]["room_info"]["room_id"] #为了防止上面的id是短id，这里确保得到的是长id
     except Exception as e:
         logging.warning(f'{biliapi.name}: 直播请求房间{room_id}信息异常，原因为{str(e)}，跳过直播心跳')
         webhook.addMsg('msg_simple', f'{biliapi.name}:直播心跳失败\n')
         return
+    else:
+        if ret["code"] != 0:
+            logging.info(f'{biliapi.name}: 直播请求房间{room_id}信息失败，信息为：{ret["message"]}，跳过直播心跳')
+            webhook.addMsg('msg_simple', f'{biliapi.name}:直播间{room_id}心跳失败\n')
+            return
+        if not ret["data"]["room_info"]["live_status"] in live_status:
+            return
+        parent_area_id = ret["data"]["room_info"]["parent_area_id"]
+        area_id = ret["data"]["room_info"]["area_id"]
+        room_id = ret["data"]["room_info"]["room_id"] #为了防止上面的id是短id，这里确保得到的是长id
     del ret
 
     retry = 2

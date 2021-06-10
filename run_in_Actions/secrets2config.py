@@ -74,9 +74,22 @@ if PUSH_MESSAGE:
         }
     i = 0
     webhooks = []
-    for x in PUSH_MESSAGE.split("\n"):
+    for ii, x in enumerate(PUSH_MESSAGE.split("\n")):
         value = x.strip()
-        if x.startswith("SCU"):
+        if x.startswith("SCT"):
+            i += 1
+            webhooks.append({
+                "name": f"server酱Turbo版消息推送{i}",
+                "msg_separ": "\n\n",
+                "method": 1,
+                "url": f"https://sctapi.ftqq.com/{value}.send",
+                "params": {
+                    "text": "{title}",
+                    "desp": f"{{{msg_type}}}" 
+                }
+            })
+            print(f"push_message第{ii+1}行解析为server酱Turbo版消息推送")
+        elif x.startswith("SCU"):
             i += 1
             webhooks.append({
                 "name": f"server酱消息推送{i}",
@@ -88,6 +101,7 @@ if PUSH_MESSAGE:
                     "desp": f"{{{msg_type}}}" 
                 }
             })
+            print(f"push_message第{ii+1}行解析为server酱消息推送")
         elif re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", value):
             i += 1
             webhooks.append({
@@ -101,6 +115,7 @@ if PUSH_MESSAGE:
                     "text": f"{{{msg_type}}}" # 邮件内容
                 }
             })
+            print(f"push_message第{ii+1}行解析为邮箱消息推送")
         elif re.match("^[0-9a-z]{32}$", value):
             i += 1
             webhooks.append({
@@ -111,8 +126,9 @@ if PUSH_MESSAGE:
                     "c": f"{{{msg_type}}}"
                 }
             })
+            print(f"push_message第{ii+1}行解析为酷Q消息推送")
         else:
-            ma = re.match("^([0-9]{7,11}:[0-9 a-z A-Z]*),(.*)$", value)
+            ma = re.match("^([0-9]{7,11}:[0-9 a-z A-Z -_]*),(.*)$", value)
             if ma:
                 i += 1
                 ma = ma.groups()
@@ -125,6 +141,7 @@ if PUSH_MESSAGE:
                         "text": f"{{{msg_type}}}" 
                     }
                 })
+                print(f"push_message第{ii+1}行解析为telegram_bot消息推送")
     configData["webhook"]["hooks"] = webhooks
 
 with open('./config/config.json','w',encoding='utf-8') as fp:

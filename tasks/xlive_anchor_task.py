@@ -1,5 +1,4 @@
 from BiliClient import asyncbili
-from .import_once import taday
 import logging, time
 from asyncio import TimeoutError, sleep
 from aiohttp.client_exceptions import ServerDisconnectedError
@@ -17,13 +16,12 @@ async def xlive_anchor_task(biliapi: asyncbili,
     unfollow = task_config.get("unfollow", True)
     clean_group_interval = task_config.get("clean_group_interval", 0)
     run_once = task_config.get("run_once", False)
-
     if follow_group:
         tagid = await getRelationTagByName(biliapi, follow_group)
         if tagid == -1:
             logging.warning(f'{biliapi.name}: 天选时刻指定关注分组不可用，退出任务')
             return
-        if clean_group_interval != 0 and taday % clean_group_interval == 0:
+        if clean_group_interval != 0 and time.localtime(time.time() + 28800 + time.timezone).tm_mday % clean_group_interval == 0:
             await cleanGroup(biliapi, tagid)
 
     save_map = {}

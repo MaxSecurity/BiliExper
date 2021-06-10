@@ -7,13 +7,13 @@ import logging
 
 async def vip_task(biliapi: asyncbili,
                    task_config: dict
-                   ) -> Coroutine[Awaitable[None]]:
+                   ) -> Coroutine[None, None, None]:
     now = datetime.utcnow() + timedelta(hours=8)
     month_len = monthrange(now.year, now.month)[1]
     receive_day = task_config.get("receiveDay", 1)
-    receive_day = receive_day if receive_day > 0 else monthlen + receive_day
+    receive_day = receive_day if receive_day > 0 else month_len + receive_day
     chargeDay = task_config.get("chargeDay", 1)
-    chargeDay = chargeDay if chargeDay > 0 else monthlen + chargeDay
+    chargeDay = chargeDay if chargeDay > 0 else month_len + chargeDay
 
     if now.day == receive_day:
         await receivePrivilege(biliapi)
@@ -22,7 +22,7 @@ async def vip_task(biliapi: asyncbili,
         await bpCharge(biliapi, task_config["BpCharge"])
 
 pivilege = ('大会员B币券', '大会员优惠券')
-async def receivePrivilege(biliapi: asyncbili) -> Coroutine[Awaitable[None]]:
+async def receivePrivilege(biliapi: asyncbili) -> Coroutine[None, None, None]:
     '''领取大会员权益'''
     try:
         ret = await biliapi.vipPrivilegeList()
@@ -50,7 +50,7 @@ async def receivePrivilege(biliapi: asyncbili) -> Coroutine[Awaitable[None]]:
                     logging.warning(f'{biliapi.name}: 领取{pivilege[x["type"] - 1]}失败，信息为({ret["message"]})')
                     webhook.addMsg('msg_simple', f'{biliapi.name}:领取{pivilege[x["type"] - 1]}失败\n')
 
-async def receivePrivilege(biliapi: asyncbili) -> Coroutine[Awaitable[None]]:
+async def receivePrivilege(biliapi: asyncbili) -> Coroutine[None, None, None]:
     '''领取大会员权益'''
     try:
         ret = await biliapi.vipPrivilegeList()
@@ -80,7 +80,7 @@ async def receivePrivilege(biliapi: asyncbili) -> Coroutine[Awaitable[None]]:
 
 async def bpCharge(biliapi: asyncbili,
                    chargeConfig: dict
-                   ) -> Coroutine[Awaitable[None]]:
+                   ) -> Coroutine[None, None, None]:
     '''B币劵消费'''
     try:
         ret = await biliapi.getUserWallet()

@@ -1,7 +1,6 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
-from .import_once import get_ids
-import logging
+import logging, asyncio, random
 
 async def coin_task(biliapi: asyncbili, 
                     task_config: dict
@@ -37,9 +36,9 @@ async def coin_task(biliapi: asyncbili,
         logging.info(f'{biliapi.name}: 不需要投币')
         return
 
+    delay = task_config.get("delay", [6 ,8])
+
     su = 0
-    if not 'do_task' in task_config:
-        task_config["do_task"] = [1] #兼容旧的配置文件
     try:
         async for aid, flag in get_coin_aids(biliapi, task_config):
             #flag为0，aid为视频id，flag为up主uid，aid为专栏id
@@ -81,6 +80,9 @@ async def coin_task(biliapi: asyncbili,
                         break
             if not toubi_num:
                 break
+            else:
+                await asyncio.sleep(random.randint(delay[0], delay[1]))
+
     except Exception as e:
         logging.warning(f'{biliapi.name}: 获取B站视频信息异常，原因为{str(e)}，跳过投币')
     if su < target:
@@ -237,7 +239,7 @@ async def get_coin_aids(biliapi: asyncbili,
     '''按条件生成需要投币的稿件id，异步生成器'''
     for mode in task_config["do_task"]:
         if mode == 1:
-            for x in (await get_ids(biliapi))["data"]["archives"]:
+            for x in (await biliapi.getRegions(27, 15))["data"]["archives"]:
                 yield x["aid"], 0
         elif mode == 2:
             if 'up' in task_config:

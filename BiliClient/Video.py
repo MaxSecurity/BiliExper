@@ -5,23 +5,22 @@ __all__ = (
     "VideoParser"
 )
 
-from . import bili
+from . import bili, biliContext
 import os, math, time, base64, re
 from hashlib import md5
 from concurrent.futures import ThreadPoolExecutor
 from threading import Lock
-from typing import Union, List
+from typing import Sequence, List
 
-class VideoUploaderWeb(object):
+class VideoUploaderWeb(biliContext):
     '''B站视频上传类(模拟网页端)'''
-    login_by_password = bili.login_by_password
-    login_by_cookie = bili.login_by_cookie
 
     def __init__(self, 
+                 biliapi: bili,
                  title: str = "", 
                  desc: str = "", 
                  dtime: int = 0, 
-                 tag: list = [], 
+                 tag: Sequence[str] = [], 
                  copyright: int = 2, 
                  tid: int = 174, 
                  source: str = "", 
@@ -30,18 +29,20 @@ class VideoUploaderWeb(object):
                  subtitle = {"open":0,"lan":""}
                  ):
         '''
-        title          str   稿件标题
-        desc           str   稿件简介
-        dtime          int   延迟发布时间,最短4小时后,10位时间戳
-        tag            list  标签列表
-        copyright      int   是否原创,原创取1,转载取2
-        tid            int   稿件分区id,默认为174,生活其他分区
-        source         str   非原创时需提供转载来源网址
-        cover          str   稿件封面,图片url而非本地路径
+        biliapi        bili           B站接口对象实例
+        title          str            稿件标题
+        desc           str            稿件简介
+        dtime          int            延迟发布时间,最短4小时后,10位时间戳
+        tag            Sequence[str]  标签列表
+        copyright      int            是否原创,原创取1,转载取2
+        tid            int            稿件分区id,默认为174,生活其他分区
+        source         str            非原创时需提供转载来源网址
+        cover          str            稿件封面,图片url而非本地路径
         desc_format_id int
         subtitle       dict
         '''
-        bili.__init__(self)
+        super(VideoUploaderWeb, self).__init__(biliapi)
+
         self._data = {
             "copyright":copyright,
             "videos":[],
@@ -78,21 +79,21 @@ class VideoUploaderWeb(object):
             fileobj.seek(sn*fsize)
             data = fileobj.read(fsize)
             lock.release()
-            bili.videoUpload(self, url, auth, upload_id, data, sn, chunks, sn*fsize, size) #上传分块
+            self._api.videoUpload(url, auth, upload_id, data, sn, chunks, sn*fsize, size) #上传分块
 
         path, name = os.path.split(filepath)#分离路径与文件名
         preffix = os.path.splitext(name)[0]
         with open(filepath, 'rb') as f: 
             size = f.seek(0, 2) #获取文件大小
             chunks = math.ceil(size / fsize) #获取分块数量
-            retobj = bili.videoPreupload(self, name, size) #申请上传
+            retobj = self._api.videoPreupload(name, size) #申请上传
             auth = retobj["auth"] #验证信息
             endpoint = retobj["endpoint"]  #目标服务器，用于构建上传http url
             biz_id = retobj["biz_id"]
             upos_uri = retobj["upos_uri"][6:] #目标路径，用于构建上传http url
             rname = os.path.splitext(os.path.split(upos_uri)[-1])[0] #云端文件名,不带路径和后缀
             url = f'https:{endpoint}{upos_uri}'  #视频上传路径
-            upload_id = bili.videoUploadId(self, url, auth)["upload_id"] #得到上传id
+            upload_id = self._api.videoUploadId(url, auth)["upload_id"] #得到上传id
 
             threadPool = ThreadPoolExecutor(max_workers=ThreadNum, thread_name_prefix="upload_") #创建线程池
             parts = [] #分块信息
@@ -101,7 +102,7 @@ class VideoUploaderWeb(object):
                 threadPool.submit(_upload_worker, f, ii)
             threadPool.shutdown(wait=True)
         
-        retobj = bili.videoUploadInfo(self, url, auth, parts, name, upload_id, biz_id)
+        retobj = self._api.videoUploadInfo(url, auth, parts, name, upload_id, biz_id)
         if (retobj["OK"] == 1):
             return {"title": preffix, "filename": rname, "desc": ""}
         return None
@@ -120,24 +121,24 @@ class VideoUploaderWeb(object):
         with open(filepath, 'rb') as f: 
             size = f.seek(0, 2) #获取文件大小
             chunks = math.ceil(size / fsize) #获取分块数量
-            retobj = bili.videoPreupload(self, name, size) #申请上传
+            retobj = self._api.videoPreupload(name, size) #申请上传
             auth = retobj["auth"]
             endpoint = retobj["endpoint"]
             biz_id = retobj["biz_id"]
             upos_uri = retobj["upos_uri"][6:]
             rname = os.path.splitext(os.path.split(upos_uri)[-1])[0] #云端文件名,不带路径和后缀
             url = f'https:{endpoint}{upos_uri}'  #视频上传路径
-            upload_id = bili.videoUploadId(self, url, auth)["upload_id"] #得到上传id
+            upload_id = self._api.videoUploadId(url, auth)["upload_id"] #得到上传id
 
             #开始上传
             parts = [] #分块信息
             f.seek(0, 0)
             for i in range(chunks): #单线程分块上传，官方支持三线程
                 data = f.read(fsize) #一次读取一个分块大小
-                bili.videoUpload(self, url, auth, upload_id, data, i, chunks, i*fsize, size)#上传分块
+                self._api.videoUpload(url, auth, upload_id, data, i, chunks, i*fsize, size)#上传分块
                 parts.append({"partNumber":i+1,"eTag":"etag"}) #添加分块信息，partNumber从1开始
         
-        retobj = bili.videoUploadInfo(self, url, auth, parts, name, upload_id, biz_id)
+        retobj = self._api.videoUploadInfo(url, auth, parts, name, upload_id, biz_id)
         if (retobj["OK"] == 1):
             return {"title": preffix, "filename": rname, "desc": ""}
         return None
@@ -152,22 +153,22 @@ class VideoUploaderWeb(object):
         suffix = os.path.splitext(filepath)[-1]
         with open(filepath,'rb') as f:
             code = base64.b64encode(f.read()).decode()
-        return bili.videoUpcover(self, f'data:image/{suffix};base64,{code}')["data"]["url"].replace('http://', 'https://')
+        return self._api.videoUpcover(f'data:image/{suffix};base64,{code}')["data"]["url"].replace('http://', 'https://')
 
     def submit(self) -> dict:
         '''提交视频'''
         if self._data["title"] == "":
             self._data["title"] = self._data["videos"][0]["title"]
-        self._submit = bili.videoAdd(self, self._data)
+        self._submit = self._api.videoAdd(self._data)
         return self._submit
 
     def delete(self) -> bool:
         '''立即撤销本视频的发布(会丢失硬币)，失败(有验证码)返回false'''
         aid = self._submit["data"]["aid"]
-        retobj = bili.videoPre(self)
+        retobj = self._api.videoPre()
         challenge = retobj["data"]["challenge"]
         gt = retobj["data"]["gt"]
-        return (self.videoDelete(self, aid, challenge, gt, f'{gt}%7Cjordan')["code"] == 0)
+        return (self._api.videoDelete(aid, challenge, gt, f'{gt}%7Cjordan')["code"] == 0)
 
     def getRecovers(self, 
                  upvideo: dict
@@ -176,7 +177,7 @@ class VideoUploaderWeb(object):
         返回官方生成的封面,返回url列表,刚上传可能获取不到并返回空列表
         upvideo dict 由uploadFile方法返回的dict
         '''
-        return bili.videoRecovers(self, upvideo["filename"])["data"]
+        return self._api.videoRecovers(upvideo["filename"])["data"]
 
     def getTags(self, 
                 upvideo: dict
@@ -185,7 +186,7 @@ class VideoUploaderWeb(object):
         返回官方推荐的tag列表
         upvideo dict 由uploadFile方法返回的dict
         '''
-        return [x["tag"] for x in bili.videoTags(self, upvideo["title"], upvideo["filename"])["data"]]
+        return [x["tag"] for x in self._api.videoTags(upvideo["title"], upvideo["filename"])["data"]]
 
     def add(self, 
             upvideo: dict
@@ -229,11 +230,11 @@ class VideoUploaderWeb(object):
         self._data["desc"] = desc
 
     def setTag(self, 
-               tag: list = []
+               tag: Sequence[str] = []
                ) -> None:
         '''
         设置标签
-        tag list 标签字符串列表
+        tag Sequence[str] 标签字符串列表
         '''
         tagstr = ""
         dynamic = ""
@@ -302,34 +303,33 @@ class VideoUploaderWeb(object):
         '''
         self._data["subtitle"] = subtitle
 
-class VideoUploaderApp(object):
+class VideoUploaderApp(biliContext):
     '''B站视频上传类(模拟APP端)'''
-    login_by_access_token = bili.login_by_access_token
-    login_by_password = bili.login_by_password
-    access_token = bili.access_token
-    refresh_token = bili.refresh_token
 
     def __init__(self, 
+                 biliapi: bili,
                  title: str = "", 
                  desc: str = "",
                  dtime: int = 0, 
-                 tag: list = [], 
+                 tag: Sequence[str] = [], 
                  copyright: int = 2, 
                  tid: int = 174, 
                  source: str = "", 
                  cover: str = "",
                  ):
         '''
-        title          str   稿件标题
-        desc           str   稿件简介
-        dtime          int   延迟发布时间,最短4小时后,10位时间戳
-        tag            list  标签列表
-        copyright      int   是否原创,原创取1,转载取2
-        tid            int   稿件分区id,默认为174,生活其他分区
-        source         str   非原创时需提供转载来源网址
-        cover          str   稿件封面,图片url而非本地路径
+        biliapi        bili            B站接口对象实例
+        title          str             稿件标题
+        desc           str             稿件简介
+        dtime          int             延迟发布时间,最短4小时后,10位时间戳
+        tag            Sequence[str]   标签列表
+        copyright      int             是否原创,原创取1,转载取2
+        tid            int             稿件分区id,默认为174,生活其他分区
+        source         str             非原创时需提供转载来源网址
+        cover          str             稿件封面,图片url而非本地路径
         '''
-        bili.__init__(self)
+        super(VideoUploaderApp, self).__init__(biliapi)
+
         self._data = {
             "build": 1006,
             "copyright": copyright,
@@ -360,7 +360,7 @@ class VideoUploaderApp(object):
         path, name = os.path.split(filepath)#分离路径与文件名
         preffix = os.path.splitext(name)[0]
 
-        pre = bili.videoPreuploadApp(self) #申请上传
+        pre = self._api.videoPreuploadApp() #申请上传
         assert pre["OK"] == 1
 
         m5 = md5()
@@ -372,9 +372,9 @@ class VideoUploaderApp(object):
             for i in range(chunks): #单线程分块上传
                 data = f.read(fsize) #一次读取一个分块大小
                 m5.update(data)
-                assert 1 == bili.videoUploadApp(self, pre["url"], name, data, md5(data).hexdigest(), i+1, chunks)["OK"] #上传分块
+                assert 1 == self._api.videoUploadApp(pre["url"], name, data, md5(data).hexdigest(), i+1, chunks)["OK"] #上传分块
 
-        assert 1 == bili.videoUploadCompleteApp(self, pre["complete"], name, size, m5.hexdigest(), chunks)["OK"]
+        assert 1 == self._api.videoUploadCompleteApp(pre["complete"], name, size, m5.hexdigest(), chunks)["OK"]
 
         return {"title": os.path.splitext(name)[0], "filename": pre["filename"], "desc": ""}
 
@@ -386,7 +386,7 @@ class VideoUploaderApp(object):
         filepath str 本地图片路径
         '''
         with open(filepath,'rb') as f:
-            ret = bili.videoUpcoverApp(self, f)
+            ret = self._api.videoUpcoverApp(f)
         
         assert 0 == ret["code"]
         return ret["data"]["url"]
@@ -399,20 +399,20 @@ class VideoUploaderApp(object):
         if self._data["title"] == "":
             self._data["title"] = self._data["videos"][0]["title"]
 
-        return bili.videoAddApp(self, self._data)
+        return self._api.videoAddApp(self._data)
 
     def setTag(self, 
-               tag: list = []
+               tag: Sequence[str] = []
                ) -> None:
         '''
         设置标签
-        tag list 标签字符串列表
+        tag Sequence[str] 标签字符串列表
         '''
         self._data["tag"] = ",".join(tag)
 
     def getTags(self) -> list:
         '''返回官方推荐的tag列表'''
-        ret = bili.videoTagsApp(self, self._data["title"], self._data["tid"], self._data["desc"])
+        ret = self._api.videoTagsApp(self._data["title"], self._data["tid"], self._data["desc"])
         assert 0 == ret["code"]
         return ret["data"]["tags"]
 
@@ -473,17 +473,17 @@ class _videoStream(object):
 
 class _videos(object):
     '''视频信息，视频地址解析类'''
-    def __init__(self, 
+    def __init__(self,
                  subtitle: str, 
                  bvid: str, 
-                 cid: int, 
+                 cid: int,
                  biliapi: bili
                  ):
         '''
-        subtitle  str  视频标题(分P视频)
-        bvid      str  稿件bv号
-        cid       int  视频cid，同一个稿件不同分P的bv号相同cid不同
-        biliapi   bili B站会话接口类的实例
+        subtitle  str   视频标题(分P视频)
+        bvid      str   稿件bv号
+        cid       int   视频cid，同一个稿件不同分P的bv号相同cid不同
+        biliapi   bili  B站接口对象实例
         '''
         self._title = re.sub('[\/:*?"<>|]','', subtitle).strip()
         self._bvid = bvid
@@ -539,23 +539,18 @@ class _videos(object):
                 ret.append(_videoStream(f'{self._title}.mp4', data["durl"][0]["url"].replace('http:','https:'),accept_description[ii],data["durl"][0]["size"], self._cid))
         return ret
 
-class VideoParser(object):
+class VideoParser(biliContext):
     '''B站视频稿件解析类'''
 
     def __init__(self, 
-                 url: str = '', 
-                 biliapi: bili = None
+                 biliapi: bili = None,
+                 url: str = ''
                  ):
         '''
-        url      str  视频链接
         biliapi  bili B站会话接口类的实例
+        url      str  视频链接
         '''
-        if biliapi:
-            self._isOwner = False
-            self._api = biliapi
-        else:
-            self._isOwner = True
-            self._api = bili()
+        super(VideoParser, self).__init__(biliapi)
         
         if url:
             self.parser(url)
@@ -600,7 +595,3 @@ class VideoParser(object):
     def getTitle(self):
         '''获取标题'''
         return re.sub('[\/:*?"<>|]','', self._title).strip()
-
-    def __del__(self):
-        if self._isOwner:
-            self._api.close()

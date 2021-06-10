@@ -1,13 +1,13 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
-import logging, json
-from .import_once import now_time
+import logging, json, time
 
 async def clean_dynamic_task(biliapi: asyncbili,
                        task_config: dict
                        ) -> None:
     su, er = 0, 0
     time_range = task_config.get("days_range", [7, 30])
+    now_time = int(time.time())
     endtime = now_time - (now_time + 28800) % 86400 + 86400 - time_range[0] * 86400 #清理结束时间
     starttime = endtime - time_range[1] * 86400                                     #清理开始时间
 

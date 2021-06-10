@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #from BiliClient import VideoUploaderWeb as VideoUploader    # 模拟网页端上传，支持多线程但不能分P
-from BiliClient import VideoUploaderApp  as VideoUploader    # 模拟APP端上传，支持分P但没有多线程
+from BiliClient import VideoUploaderApp  as VideoUploader, bili    # 模拟APP端上传，支持分P但没有多线程
 from getopt import getopt
 import os, sys, re, time
 from json import dump
@@ -19,16 +19,17 @@ def main(*args, **kwargs):
     with open(path,'r',encoding='utf-8-sig') as fp:
         userData = load(fp)
 
-    video_uploader = VideoUploader()
+    biliapi = bili()
+    video_uploader = VideoUploader(biliapi)
     isLogin = False
     if userData["access_token"] and \
-        video_uploader.login_by_access_token(userData["access_token"], userData["refresh_token"]):
+        biliapi.login_by_access_token(userData["access_token"], userData["refresh_token"]):
         ...
     elif userData["username"] and \
         userData["password"] and \
-        video_uploader.login_by_password(userData["username"], userData["password"]):
-        userData["access_token"] = video_uploader.access_token
-        userData["refresh_token"] = video_uploader.refresh_token
+        biliapi.login_by_password(userData["username"], userData["password"]):
+        userData["access_token"] = biliapi.access_token
+        userData["refresh_token"] = biliapi.refresh_token
         with open(path,'w',encoding='utf-8') as fp:
             dump(userData, fp, ensure_ascii=False, indent=4)
     else:
@@ -106,7 +107,7 @@ if __name__=="__main__":
             print('以上参数中只有-v --videopath为必选参数，其他均为可选参数')
             exit()
         elif opt in ('-V','--version'):
-            print('B站视频上传器 videoDownloader v1.2.0')
+            print('B站视频上传器 videoDownloader v1.2.1')
             exit()
         elif opt in ('-v','--videopath'):
             kwargs["path"].append(arg)

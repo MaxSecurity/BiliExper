@@ -1,34 +1,38 @@
 <div align="center"> 
 <h1 align="center">
 BiliExp
+原作者：https://github.com/happy888888 此项目只是备份和自己修改，不存在Actione服务，不定时更新其他的等，建议大家还是用腾讯云函数或者服务器等操作运行。求Star！！！
 </h1>
 
-![image](https://user-images.githubusercontent.com/67217225/96542531-d6bcdb80-12d4-11eb-81e1-49f3d3b85dfe.png)
+
+Actions功能此项目不支持，原项目就是因为Actions导致项目被封的。
+请不要滥用相关 API，让我们一起爱护 B 站 ❤
+
+请各位务必遵守 Github 服务条款。不要滥用 Actions 工作流。
+
+Please be sure to abide by the Github terms of service. Don’t abuse the Actions workflow.
+
 <br>
-[![](https://img.shields.io/badge/author-%E6%98%9F%E8%BE%B0-red "作者")](https://github.com/happy888888/ )
-![](https://img.shields.io/badge/dynamic/json?label=GitHub%20Followers&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dgithub%26queryKey%3Dhappy888888&labelColor=282c34&color=181717&logo=github&longCache=true "关注数量")
 <br>
-![](https://img.shields.io/github/stars/happy888888/BiliExp.svg?style=plastic&logo=appveyor "Star数量")
-![](https://img.shields.io/github/forks/happy888888/BiliExp.svg?style=plastic&logo=stackshare "Fork数量")
-[![](https://img.shields.io/badge/LICENCE-SATA-BLUE.svg?style=plastic "协议")](https://github.com/zTrix/sata-license)
-![](https://img.shields.io/badge/python->=3.6-GREEN.svg?style=social "python版本")
-![](https://img.shields.io/github/contributors/happy888888/BiliExp "贡献者")
-![](https://img.shields.io/github/downloads/happy888888/BiliExp/total?style=flat-square "下载量")
 <br>
-![](https://img.shields.io/docker/pulls/happy888888/biliexp?color=purple "docker拉取数")
-![](https://img.shields.io/docker/image-size/happy888888/biliexp "docker镜像大小")
 
 </div>
 
 | ↳ Stargazers | ↳ Forkers |
 |  :---:  | :---:  |
-| [![Stargazers repo roster for @happy888888/BiliExp](https://reporoster.com/stars/happy888888/BiliExp)](https://github.com/happy888888/BiliExp/stargazers)  | [![Forkers repo roster for @happy888888/BiliExp](https://reporoster.com/forks/happy888888/BiliExp)](https://github.com/happy888888/BiliExp/network/members) |
+| [![Stargazers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/stars/MaxSecurity/BiliExper)](https://github.com/MaxSecurity/BiliExper/stargazers)  | [![Forkers repo roster for @MaxSecurity/BiliExper](https://reporoster.com/forks/MaxSecurity/BiliExper)](https://github.com/MaxSecurity/BiliExper/network/members) |
 
 # 项目说明
 
 本项目为bilibili(哔哩哔哩,以下简称B站)助手，涵盖了B站视频主站，直播，漫画等领域，提供B站自动化养号(服务器挂机,多账户)，视频音频漫画下载，视频专栏音乐投稿等工具集，方便大家更好地使用B站。如果您对本项目有新的建议，想在本项目上添加新的功能，欢迎贡献你的想法，帮助本项目更好地发展。
 
 </br>[转至目录快速使用](#目录)
+## 下载直接运行操作：
+#### 1.直接下载下来安装运行 python3 BiliExp.py 只要不关闭程序程序就会每一个小时运行一次(也可以定时某个时间运行一次 我把代码注释在里面需要的自行修改)。
+#### 2.如果python3 BiliExp.py 运行错误 请运行 pip3 install -r requirements.txt 安装模块即可。
+#### 3.事先修改config文件夹中的config.json 文件添加上你们的 账号信息Key推送Key信息。
+#### 4.然后感谢happy888888作者开发了此套程序 @happy888888 老哥把快把Actione服务删除重新上架吧。
+
 
 ## 主要功能
 **一、B站自动操作脚本BiliExp.py**
@@ -62,9 +66,10 @@ BiliExp
 
 **二、脚本up主系列**
 * python实现B站专栏的编写，排版和发表
+* python实现B站动态发布
 * python实现B站视频稿件的上传和发布
 * python实现B站音频(lrc歌词)稿件(单曲和合辑)的上传和发布
-</br>(例子和教程请参考[专栏、视频和音频的发表(面向开发者)](/机器人up主#python实现B站发布专栏视频和音频的方法)
+</br>(例子和教程请参考[专栏、动态、视频和音频的发表(面向开发者)](/机器人up主#python实现B站发布专栏动态视频和音频的方法)
 
 </br>[命令行视频投稿工具](#使用说明视频投稿部分)
 
@@ -98,8 +103,7 @@ BiliExp
   - [七、openwrt等路由器部署](#方式七openwrt等路由器部署)
 - [使用说明(下载器部分)](#使用方式下载器部分)
 - [使用说明(视频投稿部分)](#使用说明视频投稿部分)
-- [使用说明(专栏、视频和音频的发表,面向开发者)](/机器人up主#python实现B站发布专栏视频和音频的方法)
-- [更新日志](#更新日志)
+- [使用说明(专栏、动态、视频和音频的发表,面向开发者)](/机器人up主#python实现B站发布专栏动态视频和音频的方法)
 - [欢迎打赏](#打赏)
 - [获得B站账户cookies方法](#获得cookies方法)
 - [一些实用的B站PC浏览器辅助小脚本](/browser_assist#这里是一些用于b站的浏览器辅助脚本)
@@ -158,10 +162,13 @@ BiliExp
         ```
 		注：每行一个推送参数(SCKEY email telegramBot_token SKEY或者空行)，***可以同时提供多个或不提供SCKEY或email或telegramBot_token或SKEY，填写后会同时推送***,<br>
 		***使用telegramBot的注意，除了填写token,还要填写chat_id,在同一行用逗号隔开***,比如例子提供的意思是telegram token为`1443793198:AAEI9TGazdrj4Jh6X6B7CvuAKX4IivEb450`,chat_id为`1459469720`,<br>
-		***SCKEY来自server酱(微信推送)，email为你的邮箱，SKEY来自酷推(QQ推送)***
+		***SCKEY来自server酱(微信推送，支持Turbo版)，email为你的邮箱，SKEY来自酷推(QQ推送)***
         *  2.1.3 (可选)name为"advconfig"           value为/config/config.json文件的所有内容(直接复制粘贴整个文件)
-		***此项为详细配置文件，可配置所有细节参数，可直接替代前两个secrets也可以与前两个secrets共同使用，注意此项不存在时直接使用默认配置***<br>
+		***此项为详细配置文件，可配置所有细节参数，前两项secrets均会自动映射到本配置文件中***<br>
+		***请注意不要直接修改/config/config.json文件而是使用本secrets(ADVCONFIG)***<br>
 		如果使用***天选时刻***，***风纪委员投票***和 ***直播心跳(获取小心心)*** 功能可参考 [部分功能推荐配置](https://github.com/happy888888/BiliExp/issues/178)
+        *  2.1.4 (可选)name为"delay"           value为延迟时间
+		添加了本项后在启动前会延时一段时间启动任务，整数+单位(s,m,h),不带单位默认为s(秒)<br>
     *  2.2 添加完上面的"Secrets"后，进入"Actions" --》"run BiliExp"，点击右边的"Run workflow"即可第一次启动
         *  2.2.1 首次fork可能要去actions(正上方的actions不是Settings里面的actions)里面同意使用actions条款，如果"Actions"里面没有"run BiliExp"，点一下右上角的"star"，"run BiliExp"就会出现在"Actions"里面(先按照主分支说明切换分支否则找不到对应的Actions)
 		![image](https://user-images.githubusercontent.com/67217225/98933791-16659480-251c-11eb-9713-c3dbcc6321bf.png)
@@ -283,11 +290,8 @@ BiliExp
     *  4.2下载代码的版本号由参数`-t`指定，只有指定`-t 版本号`时才会缓存代码下次使用，`-t latest`和`-t newest`均为每次下载代码
     *  4.3缓存代码后每次只会执行缓存的代码,要更新版本必须删除缓存才会重新下载新代码(指定了`-t latest`(默认)和`-t newest`除外)
     *  4.4日志也存放在挂载目录中，且增量保存，可以定时清理
-	
-* 5.其他docker版本
-除了不带代码的`runner`版本，也有携带代码的`happy888888/biliexp:latest`,`happy888888/biliexp:arm64-latest`版本docker镜像可以使用，这些版本执行后会立即退出不能指定参数常驻后台
 
-### 方式七、openwrt等路由器部署
+### 方式七、openwrt等路由器部署(X86架构请直接用docker版或linux二进制版)
 
 ***此方式难度较大，如果能用其他方式请尽量使用其他方式***
 
@@ -351,11 +355,14 @@ BiliExp
 * 4.使用mangaDownloader
     ```
 	命令行参数
-	mangaDownloader -p <下载文件夹> -m <漫画> -e <章节数> -f
-	-p --path      下载保存的路径，提供一个文件夹路径，没有会自动创建文件夹，默认为当前文件夹
+	mangaDownloader -p <下载文件夹> -m <漫画> -e <章节数> -f --width=<PDF每页宽度> --height=<PDF每页高度> --split
+	-p --path      下载保存的路径，提供一个文件夹路径，没有会自动创建文件夹，不提供默认为当前文件夹
 	-m --manga     下载的漫画mc号，整数
 	-e --episode   章节数，不提供默认下载所有章节，多个用逗号分隔，连续用减号分隔  -e 2,3,5-7,10 表示2,3,5,6,7,10章节，注意番外也算一个章节
-	-f --pdf       下载后合并为一个pdf
+	-f --pdf       下载后合并为一个pdf，如果未指定-m --manga参数，则直接合并-p --path指定的文件夹内的jpg图片
+	   --width     合并为pdf时指定每页宽度(像素)，若未指定 --height 则会按漫画比例自适应高度，仅当使用-f --pdf参数后有效，否则忽略
+	   --height    合并为pdf时指定每页高度(像素)，若未指定 --width  则会按漫画比例自适应宽度，仅当使用-f --pdf参数后有效，否则忽略
+	   --split     合并为pdf时拆分每个章节为一个pdf，仅当使用-f --pdf参数后有效，否则忽略
 	-V --version   显示版本信息
 	-h --help      显示帮助信息
 	
@@ -405,202 +412,19 @@ BiliExp
 
 </br></br></br>
 
-## 更新日志
-
-### 2021/02/26更新
-
-* 1.漫画视频下载，视频稿件上传功能支持账号密码登录
-* 2.视频稿件支持多P上传
-* 3.漫画下载器支持限时免费漫画下载
-
-</br>
-
-### 2021/01/19更新
-
-* 1.导入Actions分支的所有修改
-
-</br>
-
-### 2021/01/05更新
-
-* 1.优化配置文件加载
-* 2.解决漫画下载器文件名非法的问题
-* 3.导入Actions分支的所有修改
-
-</br>
-
-### 2020/12/09更新
-
-* 1.完善音频稿件发布和下载部分
-* 2.完善助手脚本docker部署方法
-
-</br>
-
-### 2020/12/01更新
-
-* 1.视频下载器支持下载弹幕转ass字幕文件
-* 2.修复部分bug
-
-</br>
-
-### 2020/11/30更新
-
-* 1.支持命令行上传B站视频稿件
-
-</br>
-
-### 2020/11/19更新
-
-* 1.漫画视频下载器支持命令行参数
-* 2.更新说明
-
-</br>
-
-### 2020/11/18更新
-
-* 1.增加docker部署方式
-
-</br>
-
-### 2020/11/06更新
-
-* 1.修复若干bug
-* 2.增加一个Downloader.py类用于视频下载，移除对aria2的依赖
-
-</br>
-
-### 2020/10/20更新
-
-* 1.发布release版
-
-</br>
-
-### 2020/10/16更新
-
-* 1.将云函数部分与BiliExp-Actions分支合并，重构这部分所有代码，并调整文件结构
-
-</br>
-
-### 2020/10/1更新
-
-* 1.B站漫画增加自动领取每月大会员赠送的漫读劵。
-* 2.B站漫画增加自动参与站友日活动(默认关闭)。
-* 3.增加每月28号自动将没有使用的B币劵充电给自己的账户。
-
-</br>
-
-### 2020/09/27更新
-
-* 1.互动抽奖方式改为转发并评论(听说能提高中奖率🤑🤩)。
-
-</br>
-
-### 2020/09/26更新
-
-* 1.增加email推送。
-
-</br>
-
-### 2020/09/24更新
-
-* 1.移除云函数脚本中的doActivity.py和其配置文件。
-
-</br>
-
-### 2020/09/23更新
-
-* 1.更新Actions，部署前执行账号检查，应对有的人账号配置错误部署后脚本执行失败且找不出原因的情况。
-* 2.新增分支BiliExp-Actions，使依赖于云函数的功能只需要github Actions就能使用，不需要使用云函数。
-
-</br>
-
-### 2020/09/22更新
-
-* 1.更新BiliExp.py直接自动获取每月大会员权益(B币劵，优惠券)功能
-* 2.增加mangaTask.py自动用即将过期的漫读劵兑换漫画(自动购买追漫列表(默认)或者手动指定购买列表),自动用积分兑换福利券(默认关闭),合并以前的mangaClockIn.py文件到此文件
-* 3.彻底将直播开启宝箱领取银瓜子的功能从云函数中移除。
-
-</br>
-
-### 2020/09/17更新
-
-* 1.更新BiliLottery.py转发抽奖的逻辑，避免动态太多导致抽奖动态转发的遗漏
-* 2.增加videoDownloader.py下载B站视频
-* 3.增加models/aria2py.py用于B站视频的下载
-* 4.增加/player_proxy/player_proxy.js用于代理B站视频解析接口(需要部署到阿里云函数港澳台服务器)
-
-</br>
-
-### 2020/09/02更新
-
-* 1.增加topicRepost.py转发话题列表(抽奖话题)(不包含在云函数内)
-* 2.增加cancelAttention.py一键取关所有up主(不包含在云函数内)
-* 3.增加mangaDownloader.py下载B站漫画，支持合并转pdf
-* 3.删除四个已经失效的活动，现在几乎没有可以白嫖B站的官方抽奖活动了，参加(官方抽奖)活动的功能可能会取消
-
-</br>
-
-### 2020/08/28更新
-
-* 1.截至今天，B站直播开时间宝箱领取银瓜子的活动已经结束
-* 2.B站官方活动里面的 "夏日不宅宣言" 活动和 "新星计划-暑假赛" 活动已经结束，新增加"最强安利王"活动
-
-</br>
-
-### 2020/08/25更新
-
-* 1.增加送出即将过期的直播礼物的功能
-* 2.增加直播心跳维持在线状态的功能(非大老爷用户在线时长并不能加经验)
-
-</br>
-
-### 2020/08/22更新
-
-* 1.使用Actions实现脚本自动部署到阿里云，代替本文最下方的手动部署方式(已删除)
-
-</br>
-
-### 2020/08/21更新
-
-* 1.增加doActivity.py用于参加B站官方活动(抽奖类) 活动列表 https://www.bilibili.com/blackboard/x/act_list/
-    *  活动列表(抽奖类)存放在config/activity.json中
-        *  每个活动都有过期时间(目前的大部分活动都将在8.30日前过期)，活动中抽奖也有参与次数限制
-        *  有的活动每天固定赠送抽奖次数，有的活动需要转发，还有的活动需要关注投币点赞甚至投稿才能获得抽奖次数，本脚本只能做每天固定赠送抽奖次数，和转发获得抽奖次数的活动
-        *  活动过期或添加新活动均需手动更新activity.json，有新活动或者活动是否过期都可以在上面活动列表网址查看
-    * 本人首次在"舞见大合集"活动中抽中一个"小电视抱枕"，第一次在B站中抽中实物，记录一下☺️
-* 2.增加cleanDynamic.py用于清理转发的动态
-    *  清理的转发动态包括:①互动抽奖过期的动态；②两个月前带#互动抽奖#标签的动态；③被原up主删除的动态
-* 3.用户配置文件仅需要cookies，不需要再获取客户端的access_key，access_key从用户配置文件移除，用户配置文件由userData/userData.py改为config/config.json，账户检查脚本由userData/check.py移动到check.py
-
-
-</br>
-
-### 2020/08/07更新
-
-* 1.增加B站视频上传api
-* 2.增加一个自动转载视频并发布的例子(youtube一键转B站)
-
-</br>
-
-### 2020/08/06更新
-
-* 1.发现B站app的access_key与漫画app通用，调整了app相关api的结构
-* 2.新增加Article类实现专栏的自动发表,Article.Content类实现B站专栏内容的排版(支持插入B站所有标签)
-* 3.增加两个自动发表B站专栏的例子(1.收集自己动态里的抽奖内容并发表到专栏；2.自动收集P站图片并转载到专栏(此脚本发表的图片通不过B站审核))
-* 4.利用B站专栏的图片上传接口可能能实现把B站当做免费图床？(大雾)？
-
-</br></br>
-
 ## 打赏
 如果觉得本项目好用，对你有所帮助，欢迎打赏支持一下本项目发展！！！
 
 <div align="center">
 
-<img src="https://user-images.githubusercontent.com/67217225/99527309-8d48d480-29d7-11eb-8f4e-7034dbd91baf.png" width="600" title="支付宝，微信，QQ扫码赞助" style="display:block;" />
+<img src="https://raw.githubusercontent.com/MaxSecurity/BurpSuite-MacOS-Crack/main/img/%E8%B5%9E%E8%B5%8F%E7%A0%81.jpeg" width="500" title="支付宝，微信，QQ扫码赞助" style="display:block;" />
+</div>
+<div align="center">
+<img src="https://user-images.githubusercontent.com/67217225/99527309-8d48d480-29d7-11eb-8f4e-7034dbd91baf.png" width="200" title="支付宝，微信，QQ扫码赞助" style="display:block;" />
 
 </div>
 
-</br>
+<br>
 
 #### 获得cookies方法
 B站操作需要的cookie数据可以按照以下方式获取
