@@ -1,6 +1,7 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
-import logging, time
+from .import_once import now_time
+import logging
 
 async def xlive_bag_send_task(biliapi: asyncbili,
                               task_config: dict
@@ -16,7 +17,6 @@ async def xlive_bag_send_task(biliapi: asyncbili,
             return
 
     expire = task_config.get("expire", 172800)
-    now_time = int(time.time())
     try:
          uid = (await biliapi.xliveGetRoomInfo(room_id))["data"]["room_info"]["uid"]
          bagList = (await biliapi.xliveGiftBagList())["data"]["list"]

@@ -1,16 +1,17 @@
 from BiliClient import asyncbili
 from aiohttp.client_exceptions import ServerDisconnectedError
 from .push_message_task import webhook
+from .import_once import now_time
 from random import randint, choice
-import logging, json, time, asyncio, re
+import logging, json, asyncio, re, aiohttp
 from typing import Awaitable
+
+today_time = now_time - (now_time + 28800) % 86400
 
 async def lottery_task(biliapi: asyncbili, 
                        task_config: dict    #配置
-                       ) -> Awaitable[None]:
+                       ) -> None:
     #计算需要转发的时间区间
-    now_time = int(time.time())
-    today_time = now_time - (now_time + 28800) % 86400
     time_quantum = task_config.get("time_quantum", [-43200, 43200])
     start_time = today_time + time_quantum[0]
     num = (now_time - start_time) // (time_quantum[1] - time_quantum[0])
@@ -22,7 +23,7 @@ async def lottery_task(biliapi: asyncbili,
     else:
         await repost_task_X(biliapi, task_config, start_time, end_time)
 
-async def get_dynamic(biliapi: asyncbili) -> Awaitable[dict]:
+async def get_dynamic(biliapi: asyncbili) -> dict:
     '''取B站用户动态数据，异步生成器'''
     offset = 0
     hasnext = True
@@ -58,7 +59,7 @@ async def get_dynamic(biliapi: asyncbili) -> Awaitable[dict]:
 
 async def get_space_dynamic(biliapi: asyncbili,
                             uid: int,
-                            ) -> Awaitable[dict]:
+                            ) -> dict:
     '''取B站空间动态数据，异步生成器'''
     offset = ''
     hasnext = True
@@ -93,12 +94,11 @@ async def get_space_dynamic(biliapi: asyncbili,
                 logging.warning(f'{biliapi.name}: 获取空间动态列表失败次数太多，跳过获取')
                 break
 
-tag_rex = re.compile(r'.*?(#.*?#)')
 async def repost_task_E(biliapi: asyncbili, 
-                        task_config: dict,
-                        start_time: int,
-                        end_time: int
-                        ) -> Awaitable[None]:
+                       task_config: dict,
+                       start_time: int,
+                       end_time: int
+                       ) -> None:
     '''跟踪转发模式'''
     force_follow = task_config.get("force_follow", False)
     users = set()
@@ -140,22 +140,12 @@ async def repost_task_E(biliapi: asyncbili,
             else:
                 continue
             
-            fixs = None
-
             if 'card' in x:
                 card = json.loads(x["card"])
                 if 'origin_user' in card and 'info' in card["origin_user"] and 'uname' in card["origin_user"]["info"]:
                     name = card["origin_user"]["info"]["uname"]
                 else:
                     name = '未知用户'
-
-                if 'item' in card and 'content' in card["item"]:
-                    if 'repost_with_tag' in task_config:
-                        fixs = re.findall(tag_rex, card["item"]["content"])
-                        for fix in fixs.copy():
-                            for ept in task_config["repost_with_tag"]["except"]:
-                                if ept in fix:
-                                    fixs.remove(fix)
 
             if isinstance(task_config["repost"], list):
                 if len(task_config["repost"]) > 0:
@@ -172,16 +162,6 @@ async def repost_task_E(biliapi: asyncbili,
                     reply: str = ''
             else:
                 reply: str = task_config["reply"]
-
-            if fixs:
-                if task_config["repost_with_tag"]["fix"] == 1:
-                    repost = repost + ','.join(fixs)
-                    if task_config["repost_with_tag"]["reply_with_tag"]:
-                        reply = reply + ','.join(fixs)
-                else:
-                    repost = ','.join(fixs) + repost
-                    if task_config["repost_with_tag"]["reply_with_tag"]:
-                        reply = ','.join(fixs) + reply
 
             if await dynamicReply(biliapi, dyid, oid, reply, type, name):
                 su1 += 1
@@ -215,11 +195,12 @@ async def repost_task_E(biliapi: asyncbili,
     if er1 or er2:
         webhook.addMsg('msg_simple', f'{biliapi.name}:抽奖转发成功{su1}个,失败{er1}个,评论成功{su2}个,失败{er2}个\n')
 
+tag_rex = re.compile(r'.*?(#.*?#)')
 async def repost_task_X(biliapi: asyncbili, 
                         task_config: dict,
                         start_time: int,
                         end_time: int
-                        ) -> Awaitable[None]:
+                        ) -> Awaitable:
     '''转发互动抽奖，关键字抽奖'''
     already_repost_dyid = set() #记录动态列表中自己已经转发的动态id
     su1 = su2 = er1 = er2 = 0
@@ -267,7 +248,6 @@ async def repost_task_X(biliapi: asyncbili,
                                     for ept in task_config["repost_with_tag"]["except"]:
                                         if ept in fix:
                                             fixs.remove(fix)
-                            break
 
         if not find:
             find = 'extension' in x and 'lott' in x["extension"] #若抽奖标签存在
@@ -399,7 +379,7 @@ async def dynamicLike(biliapi: asyncbili,
 
 async def dynamicCreate(biliapi: asyncbili,
                         dynamic: str,
-                      ) -> Awaitable[None]:
+                      ) -> Awaitable:
     try:
         ret = await biliapi.dynamicCreate(dynamic)
     except Exception as e: 

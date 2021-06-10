@@ -1,7 +1,12 @@
 #!/bin/bash
 
 #删除非云函数需要的模块
-BiliClient_needs=("__init__.py" "asyncBiliApi.py" "asyncXliveWs.py")
+if [ "$enc_server_disabled" == "1" ];then    #如果关闭心跳加密服务器，则还需要加载心跳加密模块来保证心跳功能可用
+  BiliClient_needs=("wasm_enc" "__init__.py" "asyncBiliApi.py" "asyncXliveWs.py")
+  echo "wasmtime==0.21.0" >> ./serverless/requirements.txt
+else
+  BiliClient_needs=("__init__.py" "asyncBiliApi.py" "asyncXliveWs.py")
+fi
 params=''
 for i in ${BiliClient_needs[@]};do params="$params\|$i"; done
 delete_arr=(`ls ./BiliClient|grep -v ${params: 2}`)

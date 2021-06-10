@@ -1,10 +1,11 @@
 from BiliClient import asyncbili
 from .push_message_task import webhook
+from .import_once import get_ids
 import logging
 
 async def watch_task(biliapi: asyncbili) -> None:
     try:
-        ret = await biliapi.getRegions(27, 15)
+        ret = await get_ids(biliapi)
     except Exception as e:
         logging.warning(f'{biliapi.name}: 获取B站分区视频信息异常，原因为{str(e)}，跳过模拟视频观看')
         webhook.addMsg('msg_simple', f'{biliapi.name}:模拟视频观看失败\n')

@@ -2,21 +2,21 @@
 from aiohttp import ClientSession
 from typing import Iterable, Mapping, Dict, Awaitable, Any, Optional
 import time, json
+from importlib.util import find_spec
+from . import __name__ as top_module_name
 
-_default_headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-    "Referer": "https://www.bilibili.com/",
-    'Connection': 'keep-alive'
-    }
+if find_spec('.wasm_enc', top_module_name):  #从本模块下顶层目录寻找直播心跳解密模块，如果没找到使用在线解密服务器
+    from .wasm_enc import calc_sign
+elif find_spec('wasm_enc'):
+    from wasm_enc import calc_sign
+else:
+    enc_server = 'https://1578907340179965.cn-shanghai.fc.aliyuncs.com/2016-08-15/proxy/bili_server/heartbeat/'
 
 class asyncBiliApi(object):
     '''B站异步接口类'''
-    def __init__(self,
-                 headers: Optional[Dict[str, str]]
-                 ):
-        if not headers:
-            headers = _default_headers
-        
+    def __init__(self):
+
+        headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/63.0.3239.108","Referer": "https://www.bilibili.com/",'Connection': 'keep-alive'}
         self._islogin = False
         self._show_name = None
         self._session = ClientSession(
@@ -906,10 +906,13 @@ class asyncBiliApi(object):
             "csrf_token": self._bili_jct,
             "csrf": self._bili_jct,
             }
-        enc_server = 'https://1578907340179965.cn-shanghai.fc.aliyuncs.com/2016-08-15/proxy/bili_server/heartbeat/'
-        async with self._session.post(enc_server, json={"t":post_data,"r":secret_rule}, verify_ssl=False) as r:
-            post_data["s"] = await r.text()
-
+        if 'calc_sign' in globals():            #有本地心跳验证模块
+            post_data["s"] = calc_sign(post_data, secret_rule) #依靠id，device，ts，ets，benchmark和secret_rule计算
+        elif enc_server:                        #没有本地验证模块则使用服务器
+            async with self._session.post(enc_server, json={"t":post_data,"r":secret_rule}, verify_ssl=False) as r:
+                post_data["s"] = await r.text()
+        else:
+            raise RuntimeError("没有心跳验证模块")
         url = 'https://live-trace.bilibili.com/xlive/data-interface/v1/x25Kn/X'
         async with self._session.post(url, data=post_data, verify_ssl=False) as r:
             return await r.json()
