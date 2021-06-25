@@ -689,7 +689,7 @@ class BiliApi(object):
 
     def xliveGetStatus(self):
         "B站直播获取金银瓜子状态"
-        url = "https://api.live.bilibili.com/pay/v1/Exchange/getStatus"
+        url = "https://api.live.bilibili.com/xlive/revenue/v1/wallet/myWallet?need_bp=1&need_metal=1&platform=pc"
         return self._session.get(url).json()
 
     def silver2coin(self):
