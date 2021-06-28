@@ -29,27 +29,32 @@ if [ ! -d "/BiliExp" ]; then
 fi
 
 #装载代码
-if [ $tag = "latest" ];then
-  wget -O /tmp/BiliExp.zip `wget -q -O - https://api.github.com/repos/happy888888/BiliExp/tags | grep zipball_url | head -1 | sed 's/.*: \"\(.*\)\".*/\1/g'`
-  unzip /tmp/BiliExp.zip -d /tmp
-  rm /tmp/BiliExp.zip
-  mv /tmp/*BiliExp* /tmp/BiliExp
-elif [ $tag = "newest" ];then
-  wget -O /tmp/BiliExp.zip https://archive.fastgit.org/happy888888/BiliExp/archive/master.zip
-  unzip /tmp/BiliExp.zip -d /tmp
-  rm /tmp/BiliExp.zip
-  mv /tmp/BiliExp* /tmp/BiliExp
-else
-  if [ ! -d "/BiliExp/code-cache" ]; then
-    wget -O /tmp/BiliExp.zip "https://archive.fastgit.org/happy888888/BiliExp/archive/$tag.zip"
-	unzip /tmp/BiliExp.zip -d /tmp
-	rm /tmp/BiliExp.zip
-	mv /tmp/BiliExp* /tmp/BiliExp
-    cp -r /tmp/BiliExp /BiliExp/code-cache
-  else
-    cp -r /BiliExp/code-cache /tmp/BiliExp
-  fi
-fi
+# if [ $tag = "latest" ];then
+#   wget -O /tmp/BiliExp.zip `wget -q -O - https://api.github.com/repos/happy888888/BiliExp/tags | grep zipball_url | head -1 | sed 's/.*: \"\(.*\)\".*/\1/g'`
+#   unzip /tmp/BiliExp.zip -d /tmp
+#   rm /tmp/BiliExp.zip
+#   mv /tmp/*BiliExp* /tmp/BiliExp
+# elif [ $tag = "newest" ];then
+#   wget -O /tmp/BiliExp.zip https://archive.fastgit.org/happy888888/BiliExp/archive/master.zip
+#   unzip /tmp/BiliExp.zip -d /tmp
+#   rm /tmp/BiliExp.zip
+#   mv /tmp/BiliExp* /tmp/BiliExp
+# else
+#   if [ ! -d "/BiliExp/code-cache" ]; then
+#     wget -O /tmp/BiliExp.zip "https://archive.fastgit.org/happy888888/BiliExp/archive/$tag.zip"
+# 	unzip /tmp/BiliExp.zip -d /tmp
+# 	rm /tmp/BiliExp.zip
+# 	mv /tmp/BiliExp* /tmp/BiliExp
+#     cp -r /tmp/BiliExp /BiliExp/code-cache
+#   else
+#     cp -r /BiliExp/code-cache /tmp/BiliExp
+#   fi
+# fi
+
+wget -O /tmp/BiliExp.zip https://archive.fastgit.org/happy888888/BiliExp/archive/master.zip
+unzip /tmp/BiliExp.zip -d /tmp
+rm /tmp/BiliExp.zip
+mv /tmp/BiliExp* /tmp/BiliExp
 
 cd /tmp/BiliExp
 
