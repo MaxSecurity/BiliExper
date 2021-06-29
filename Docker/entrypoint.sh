@@ -51,7 +51,7 @@ fi
 #   fi
 # fi
 
-wget -O /tmp/BiliExp.zip https://archive.fastgit.org/happy888888/BiliExp/archive/master.zip
+wget -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
 unzip /tmp/BiliExp.zip -d /tmp
 rm /tmp/BiliExp.zip
 mv /tmp/BiliExp* /tmp/BiliExp
