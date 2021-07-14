@@ -78,7 +78,7 @@ async def judgement_task(biliapi: asyncbili,
                             vote = [(4, ret["data"]["voteDelete"]), (2, ret["data"]["voteBreak"]), (1, ret["data"]["voteRule"])]
                             vote.sort(key=lambda x: x[1], reverse=True)
                             params = params.copy()
-                            params["vode"] = vote[0][0]
+                            params["vote"] = vote[0][0]
                             default = False
                         else:
                             logging.warning(f'{biliapi.name}: 获取风纪委员案件他人投票结果异常，原因为{ret["message"]}，使用默认投票参数')
