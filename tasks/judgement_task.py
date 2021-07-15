@@ -34,7 +34,6 @@ async def judgement_task(biliapi: asyncbili,
     logging.info(f'{biliapi.name}: 拥有风纪委员身份，开始获取案件投票，当前裁决正确率为：{ret["data"]["rightRadio"]}%')
     webhook.addMsg('msg_simple', f'{biliapi.name}:风纪委当前裁决正确率为：{ret["data"]["rightRadio"]}%\n')
 
-    baiduNLPConfig = task_config.get("baiduNLP", None)
     params = task_config.get("params", {})
     vote_num = task_config.get("vote_num", 20)
     check_interval = task_config.get("check_interval", 420)
