@@ -1116,6 +1116,7 @@ class asyncBiliApi(object):
             }
         async with self._session.post(url, json=post_data, verify_ssl=False) as r:
             return await r.json()
+        #{'code': 0, 'msg': '', 'data': {'total_remain_amount': 0, 'user_coupons': [], 'coupon_info': {'new_coupon_num': 0, 'coupon_will_expire': 0, 'rent_will_expire': 0, 'new_rent_num': 0, 'discount_will_expire': 0, 'new_discount_num': 0, 'month_ticket_will_expire': 0, 'new_month_ticket_num': 0, 'silver_will_expire': 0, 'new_silver_num': 0, 'remain_item': 0, 'remain_discount': 1, 'remain_coupon': 0, 'remain_silver': 31}}}
 
     async def mangaListFavorite(self, 
                                 page_num=1, 
@@ -1236,17 +1237,17 @@ class asyncBiliApi(object):
             return await r.json()
         #{"code":0,"msg":"","data":{}}
 
-    async def mangaGetCoupons(self) -> Awaitable[Dict[str, Any]]:
-        '''获取漫画劵明细'''
-        url = 'https://manga.bilibili.com/twirp/user.v1.User/GetCoupons'
-        post_data = {
-            "not_expired": True,
-            "page_num": 1,
-            "page_size": 30,
-            "tab_type": 1
-            }
-        async with self._session.post(url, data=post_data, verify_ssl=False) as r:
-            return await r.json()
+#     async def mangaGetCoupons(self) -> Awaitable[Dict[str, Any]]:
+#         '''获取漫画劵明细'''
+#         url = 'https://manga.bilibili.com/twirp/user.v1.User/GetCoupons'
+#         post_data = {
+#             "not_expired": True,
+#             "page_num": 1,
+#             "page_size": 30,
+#             "tab_type": 1
+#             }
+#         async with self._session.post(url, data=post_data, verify_ssl=False) as r:
+#             return await r.json()
         #{'code': 0, 'msg': '', 'data': {'total_remain_amount': 0, 'user_coupons': [], 'coupon_info': {'new_coupon_num': 0, 'coupon_will_expire': 0, 'rent_will_expire': 0, 'new_rent_num': 0, 'discount_will_expire': 0, 'new_discount_num': 0, 'month_ticket_will_expire': 0, 'new_month_ticket_num': 0, 'silver_will_expire': 0, 'new_silver_num': 0, 'remain_item': 0, 'remain_discount': 1, 'remain_coupon': 0, 'remain_silver': 31}}}
 
     async def mangaGetStates(self) -> Awaitable[Dict[str, Any]]:
