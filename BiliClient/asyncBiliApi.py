@@ -989,7 +989,7 @@ class asyncBiliApi(object):
 
     async def xliveGetStatus(self) -> Awaitable[Dict[str, Any]]:
         '''B站直播获取金银瓜子状态'''
-        url = "https://api.live.bilibili.com/xlive/revenue/v1/wallet/myWallet?need_bp=1&need_metal=1&platform=pc"
+        url = "https://api.live.bilibili.com/xlive/revenue/v1/wallet/getStatus"
         async with self._session.get(url, verify_ssl=False) as r:
             ret = await r.json()
         return ret
