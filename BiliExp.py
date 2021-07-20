@@ -135,6 +135,7 @@ async def run_user_tasks(user: dict,           #用户配置
         if task_array:
             await asyncio.wait(task_array)        #异步等待所有任务完成
 
+
 def main(*args, **kwargs):
     try:
         configData = load_config(kwargs.get("config", None))
@@ -149,25 +150,58 @@ def main(*args, **kwargs):
 
     #启动任务
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(loop.create_task(start(configData)))
+    if 'looping' in kwargs:
+        while True:
+            task=loop.create_task(start(configData))
+            loop.run_until_complete(task)
+            time.sleep(kwargs["looping"])
+    elif 'timing' in kwargs:
+        while True:
+            time_now = time.strftime("%H:%M:%S", time.localtime()) # 刷新
+            if time_now == kwargs["timing"]: # 此处设置每天定时的时间
+                task=loop.create_task(start(configData))
+                loop.run_until_complete(task)
+                sleep(2)
+    else:
+        task=loop.create_task(start(configData))
+        loop.run_until_complete(task)
+
+def vaildTiming(timing):
+        try:
+            time.strptime(timing, "%H:%M:%S")
+            return True
+        except:
+            return False
 
 if __name__=="__main__":
     kwargs = {}
-    opts, args = getopt(sys.argv[1:], "hvc:l:",["configfile=","logfile="])
+    opts, args = getopt(sys.argv[1:], "hvc:l:lo:tm:",["configfile=","logfile=","looping=","timing="])
     for opt, arg in opts:
         if opt in ('-c','--configfile'):
             kwargs["config"] = arg
         elif opt in ('-l','--logfile'):
             kwargs["log"] = arg
+        elif opt in ('-lo','--looping'):
+            if arg.strip() == '':
+                arg = 3600*24
+            kwargs["looping"] = int(arg)
+        elif opt in ('-tm','--timing'):
+            if arg.strip() == '':
+                arg = '11:30:00'
+            if vaildTiming(arg) :
+                kwargs["timing"] = arg
+            else:
+                print('timing is error!')
+                sys.exit()
         elif opt == '-h':
             print('BliExp -c <configfile> -l <logfile>')
             sys.exit()
         elif opt == '-v':
             print(f'BiliExp v{main_version_str}')
             sys.exit()
-while True: #死循环 每一个小时运行一次配置
-    main(**kwargs)
-    time.sleep(3600)
+
+main(**kwargs)
+
 
 # while True: #每天某个时间段运行配置
 #     time_now = time.strftime("%H:%M:%S", time.localtime()) # 刷新
