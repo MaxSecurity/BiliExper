@@ -998,7 +998,8 @@ class asyncBiliApi(object):
         '''银瓜子兑换硬币'''
         url = "https://api.live.bilibili.com/pay/v1/Exchange/silver2coin"
         post_data = {
-            "csrf_token": self._bili_jct
+            "csrf_token": self._bili_jct,
+            "csrf": self._bili_jct
             }
         async with self._session.post(url, data=post_data, verify_ssl=False) as r:
             return await r.json()
