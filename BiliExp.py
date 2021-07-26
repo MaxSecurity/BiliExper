@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import asyncio, time, logging, sys, io, os
 import encodings.idna
+import random, argparse, datetime
 from importlib import import_module
 from collections import OrderedDict
-from getopt import getopt
 from BiliClient import asyncbili
 
 
@@ -136,75 +136,102 @@ async def run_user_tasks(user: dict,           #用户配置
             await asyncio.wait(task_array)        #异步等待所有任务完成
 
 
-def main(*args, **kwargs):
+def main(args):
     try:
-        configData = load_config(kwargs.get("config", None))
+        configData = load_config(args.configfile)
     except Exception as e:
         print(f'配置加载异常，原因为{str(e)}，退出程序')
         sys.exit(6)
 
-    if 'log' in kwargs:
-        configData["log_file"] = kwargs["log"]
+    if args.logfile:
+        configData["log_file"] = args.logfile
 
     init_message(configData) #初始化消息推送
 
     #启动任务
     loop = asyncio.get_event_loop()
-    if 'looping' in kwargs:
+    if args.looping:
         while True:
             task=loop.create_task(start(configData))
             loop.run_until_complete(task)
-            time.sleep(kwargs["looping"])
-    elif 'timing' in kwargs:
+            time.sleep(args.looping)
+            if args.random:
+                random_time = random.randint(1, args.random)
+                logging.info(f'随机延时{random_time}s')
+                time.sleep(random_time)
+    elif args.timing:
         while True:
-            time_now = time.strftime("%H:%M:%S", time.localtime()) # 刷新
-            if time_now == kwargs["timing"]: # 此处设置每天定时的时间
+            now = datetime.datetime.now().time().replace(microsecond=0)
+            if now in args.timing: # 此处为设置的每天定时的时间
+                if args.random:
+                    random_time = random.randint(1, args.random)
+                    logging.info(f'随机延时{random_time}s')
+                    time.sleep(random_time)
                 task=loop.create_task(start(configData))
                 loop.run_until_complete(task)
-                sleep(2)
+                time.sleep(2)
     else:
+        if args.random:
+            random_time = random.randint(1, args.random)
+            logging.info(f'随机延时{random_time}s')
+            time.sleep(random_time)
         task=loop.create_task(start(configData))
         loop.run_until_complete(task)
 
-def vaildTiming(timing):
-        try:
-            time.strptime(timing, "%H:%M:%S")
-            return True
-        except:
-            return False
 
 if __name__=="__main__":
-    kwargs = {}
-    opts, args = getopt(sys.argv[1:], "hvc:l:lo:tm:",["configfile=","logfile=","looping=","timing="])
-    for opt, arg in opts:
-        if opt in ('-c','--configfile'):
-            kwargs["config"] = arg
-        elif opt in ('-l','--logfile'):
-            kwargs["log"] = arg
-        elif opt in ('-lo','--looping'):
-            if arg.strip() == '':
-                arg = 3600*24
-            kwargs["looping"] = int(arg)
-        elif opt in ('-tm','--timing'):
-            if arg.strip() == '':
-                arg = '11:30:00'
-            if vaildTiming(arg) :
-                kwargs["timing"] = arg
-            else:
-                print('timing is error!')
-                sys.exit()
-        elif opt == '-h':
-            print('BliExp -c <configfile> -l <logfile>')
-            sys.exit()
-        elif opt == '-v':
-            print(f'BiliExp v{main_version_str}')
-            sys.exit()
+    parser = argparse.ArgumentParser(
+        prog="BiliExper",
+        description='哔哩哔哩助手',
+        epilog="注意：random参数不能大于looping参数，也不能大于多个tm参数间的时间间隔\n",
+        add_help=False
+    )
+    parser.add_argument(
+        '-h', '--help',
+        action='help',
+        help='帮助'
+    )
 
-main(**kwargs)
+    parser.add_argument(
+        '-c', '--configfile',
+        dest='configfile',
+        help='配置文件路径'
+    )
+    parser.add_argument(
+        '-l', '--logfile',
+        dest='logfile',
+        help='日志文件路径'
+    )
+    parser.add_argument(
+        '-r', '--random',
+        dest='random',
+        type=int,
+        nargs='?',
+        const=300,
+        help='随机延时范围，单位为秒，默认值为300'
+    )
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        '-lo','--looping',
+        dest='looping',
+        type=int,
+        nargs='?',
+        const=3600*24,
+        help='循环运行间隔，使用此参数将开启循环运行，参数单位为秒（s），默认值为86400。与timing参数互斥'
+    )
+    group.add_argument(
+        '-tm','--timing',
+        dest='timing',
+        action='append',
+        type=datetime.time.fromisoformat,
+        help='指定时间执行,如11:30:00，可以多次使用，如"-tm 11:30:00 -tm 16:00:00"。与looping参数互斥'
+    )
+    parser.add_argument(
+        '-v','--version',
+        action='version',
+        version='%(prog)s {version}'.format(version=main_version_str),
+        help="版本号"
+    )
 
-
-# while True: #每天某个时间段运行配置
-#     time_now = time.strftime("%H:%M:%S", time.localtime()) # 刷新
-#     if time_now == "11:30:00": #此处设置每天定时的时间
-#         main(**kwargs)
-#         time.sleep(2) # 因为以秒定时，所以暂停2秒，使之不会在1秒内执行多次
+    args = parser.parse_args()
+main(args)
