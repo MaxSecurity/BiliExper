@@ -148,31 +148,44 @@ def main(args):
 
     init_message(configData) #初始化消息推送
 
+    if "looping" not in configData:
+        configData["looping"] = None
+    if "random" not in configData:
+        configData["random"] = None
+    if "timing" not in configData:
+        configData["timing"] = []
+
+    for i in range(len(configData["timing"])):
+        configData["timing"][i]=datetime.time.fromisoformat(configData["timing"][i])
+    
+    looping = args.looping or configData["looping"]
+    timing = args.timing or configData["timing"]
+    random_max = args.random or configData["random"]
     #启动任务
     loop = asyncio.get_event_loop()
-    if args.looping:
+    if looping:
         while True:
             task=loop.create_task(start(configData))
             loop.run_until_complete(task)
-            time.sleep(args.looping)
-            if args.random:
-                random_time = random.randint(1, args.random)
+            time.sleep(looping)
+            if random_max:
+                random_time = random.randint(1, random_max)
                 logging.info(f'随机延时{random_time}s')
                 time.sleep(random_time)
-    elif args.timing:
+    elif timing:
         while True:
             now = datetime.datetime.now().time().replace(microsecond=0)
-            if now in args.timing: # 此处为设置的每天定时的时间
-                if args.random:
-                    random_time = random.randint(1, args.random)
+            if now in timing: # 此处为设置的每天定时的时间
+                if random_max:
+                    random_time = random.randint(1, random_max)
                     logging.info(f'随机延时{random_time}s')
                     time.sleep(random_time)
                 task=loop.create_task(start(configData))
                 loop.run_until_complete(task)
                 time.sleep(2)
     else:
-        if args.random:
-            random_time = random.randint(1, args.random)
+        if random_max:
+            random_time = random.randint(1, random_max)
             logging.info(f'随机延时{random_time}s')
             time.sleep(random_time)
         task=loop.create_task(start(configData))
