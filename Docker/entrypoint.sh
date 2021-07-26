@@ -53,6 +53,7 @@ fi
 
 function download(){
   wget -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
+  [ "$?" != 0 ] && return
   unzip /tmp/BiliExp.zip -d /tmp
   rm /tmp/BiliExp.zip
   [ -d /tmp/BiliExp ] && rm -rf /tmp/BiliExp
