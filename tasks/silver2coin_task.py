@@ -6,7 +6,7 @@ async def silver2coin_task(biliapi: asyncbili) -> None:
    try:
        ret = await biliapi.xliveGetStatus()
        if ret["code"] != 0:
-           logging.warning(f'{biliapi.name}: 获取瓜子信息失败，信息为({ret["msg"]})，跳过兑换硬币')
+           logging.warning(f'{biliapi.name}: 获取瓜子信息失败，信息为({ret["message"]})，跳过兑换硬币')
            webhook.addMsg('msg_simple', f'{biliapi.name}:瓜子转硬币失败\n')
            return
    except Exception as e: 
@@ -21,7 +21,7 @@ async def silver2coin_task(biliapi: asyncbili) -> None:
    try:
        ret = await biliapi.silver2coin()
        if ret["code"] != 0:
-           logging.warning(f'{biliapi.name}: 银瓜子兑换硬币失败，信息为({ret["msg"]})')
+           logging.warning(f'{biliapi.name}: 银瓜子兑换硬币失败，信息为({ret["message"]})')
            webhook.addMsg('msg_simple', f'{biliapi.name}:瓜子转硬币失败\n')
        else:
            logging.info(f'{biliapi.name}: 成功将银瓜子兑换为1个硬币')

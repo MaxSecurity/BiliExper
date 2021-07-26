@@ -27,6 +27,8 @@ async def xlive_bag_send_task(biliapi: asyncbili,
                  ret = await biliapi.xliveBagSend(room_id, uid, x["bag_id"], x["gift_id"], x["gift_num"])
                  if ret["code"] == 0:
                      logging.info(f'{biliapi.name}: {ret["data"]["send_tips"]} {ret["data"]["gift_name"]} 数量{ret["data"]["gift_num"]}')
+                 else:
+                     logging.info(f'{biliapi.name}:在直播间{room_id}送出礼物失败，{ret["message"]}')
          if not ishave:
              logging.info(f'{biliapi.name}: 没有{expire}s内过期的直播礼物，跳过赠送')
     except Exception as e:

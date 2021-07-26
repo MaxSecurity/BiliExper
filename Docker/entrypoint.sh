@@ -11,10 +11,10 @@ while getopts "t:dc:" opt; do
     t)
       tag=$OPTARG
       ;;
-	d)
+    d)
       daemon="yes"
       ;;
-	c)
+    c)
       cron=$OPTARG
       ;;
     \?)
@@ -51,16 +51,20 @@ fi
 #   fi
 # fi
 
-wget -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
-unzip /tmp/BiliExp.zip -d /tmp
-rm /tmp/BiliExp.zip
-mv /tmp/BiliExp* /tmp/BiliExp
+function download(){
+  wget -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
+  [ "$?" != 0 ] && return
+  unzip /tmp/BiliExp.zip -d /tmp
+  rm /tmp/BiliExp.zip
+  [ -d /tmp/BiliExp ] && rm -rf /tmp/BiliExp
+  mv /tmp/BiliExp* /tmp/BiliExp
 
-cd /tmp/BiliExp
-
-if [ -f "./Docker/init.sh" ]; then
-  /bin/sh "./Docker/init.sh";
-fi
+  if [ -f "/tmp/BiliExp/Docker/init.sh" ]; then
+    /bin/sh "/tmp/BiliExp/Docker/init.sh";
+  fi
+}
+# 下载代码
+download
 
 #执行代码
 if [ $daemon = "yes" ];then
@@ -68,7 +72,10 @@ if [ $daemon = "yes" ];then
   /usr/sbin/crond start
   while :;do
     sleep 24h
+    # 每24小时下载一次代码（用作更新）
+    pkill -9 python3
+    download
   done
 else
-  /usr/local/bin/python3 BiliExp.py -c /BiliExp/config.json -l /BiliExp/BiliExp.log
+  cd /tmp/BiliExp && /usr/local/bin/python3 BiliExp.py -c /BiliExp/config.json -l /BiliExp/BiliExp.log
 fi
