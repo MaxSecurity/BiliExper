@@ -15,7 +15,7 @@ async def group_sign_task(biliapi: asyncbili) -> None:
         return
 
     su, er = 0, 0
-    for group in ret["data"]:
+    for group in ret["data"]["list"]:
         try:
             sign = await biliapi.groupSign(group["group_id"], group["owner_uid"])
         except Exception as e:
