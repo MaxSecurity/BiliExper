@@ -16,6 +16,14 @@ except:
 main_version = (1, 2, 1)
 main_version_str = '.'.join(map(str, main_version))
 
+def convertTimeString(time_string: str):
+    '''
+    转换字符串为时间对象
+    time_string str 时间字符串
+    '''
+    return datetime.datetime.strptime(time_str,'%H:%M:%S').time()
+
+
 def initlog(log_file: str, log_console: bool, msg_raw: bool = False):
     '''初始化日志参数'''
     logger_raw = logging.getLogger()
@@ -236,7 +244,7 @@ if __name__=="__main__":
         '-tm','--timing',
         dest='timing',
         action='append',
-        type=datetime.time.fromisoformat,
+        type=convertTimeString,
         help='指定时间执行,如11:30:00，可以多次使用，如"-tm 11:30:00 -tm 16:00:00"。与looping参数互斥'
     )
     parser.add_argument(
@@ -247,4 +255,4 @@ if __name__=="__main__":
     )
 
     args = parser.parse_args()
-main(args)
+    main(args)
