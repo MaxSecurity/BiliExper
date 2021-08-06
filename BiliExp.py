@@ -21,7 +21,7 @@ def convertTimeString(time_string: str):
     转换字符串为时间对象
     time_string str 时间字符串
     '''
-    return datetime.datetime.strptime(time_str,'%H:%M:%S').time()
+    return datetime.datetime.strptime(time_string,'%H:%M:%S').time()
 
 
 def initlog(log_file: str, log_console: bool, msg_raw: bool = False):
