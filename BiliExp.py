@@ -144,14 +144,14 @@ async def run_user_tasks(user: dict,           #用户配置
             await asyncio.wait(task_array)        #异步等待所有任务完成
 
 
-def main(args):
+def main(args,*kwargs):
     try:
-        configData = load_config(args.configfile)
+        configData = load_config(args.get("configfile",None))
     except Exception as e:
         print(f'配置加载异常，原因为{str(e)}，退出程序')
         sys.exit(6)
 
-    if args.logfile:
+    if args.get("logfile",None):
         configData["log_file"] = args.logfile
 
     init_message(configData) #初始化消息推送
@@ -166,9 +166,9 @@ def main(args):
     for i in range(len(configData["timing"])):
         configData["timing"][i]=convertTimeString(configData["timing"][i])
     
-    looping = args.looping or configData["looping"]
-    timing = args.timing or configData["timing"]
-    random_max = args.random or configData["random"]
+    looping = args.get("looping",None) or configData["looping"]
+    timing = args.get("timing",None) or configData["timing"]
+    random_max = args.get("random",[]) or configData["random"]
     #启动任务
     loop = asyncio.get_event_loop()
     if looping:
