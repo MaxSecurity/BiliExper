@@ -152,7 +152,7 @@ def main(args,*kwargs):
         sys.exit(6)
 
     if args.get("logfile",None):
-        configData["log_file"] = args.logfile
+        configData["log_file"] = args.get("logfile")
 
     init_message(configData) #初始化消息推送
 
