@@ -273,9 +273,7 @@
             "DedeUserID": "914624742"
         },
         "show_name": "账号2",
-        "tasks": {                //上面default参数中投币任务和风纪委任务都是开启的，这里在第二个账号上关闭而不影响其他任务和其他账号
-            "coin_task": false,   //直接赋值false是简化的关闭方法，也可以像default中那样用enable参数关闭，若只修改投币数量(配置中的其中一项)则必须按照default中的格式指定
-            "judgement_task": false
+        "tasks": {
         }
     }*/]
 }
