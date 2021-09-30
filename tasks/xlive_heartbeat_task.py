@@ -33,7 +33,7 @@ async def get_rooms(biliapi: asyncbili) -> Awaitable[List[int]]:
     page = 1
     while True:
         try:
-            ret = await biliapi.xliveFansMedal(page, 50)
+            ret = await biliapi.xliveFansMedal(page, 10)
         except Exception as e:
             logging.warning(f'{biliapi.name}: 获取有勋章的直播间异常，原因为{str(e)}')
             break
