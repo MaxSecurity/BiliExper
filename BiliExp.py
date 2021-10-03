@@ -167,8 +167,8 @@ def main(args,*kwargs):
         configData["timing"][i]=convertTimeString(configData["timing"][i])
     
     looping = args.get("looping",None) or configData["looping"]
-    timing = args.get("timing",None) or configData["timing"]
-    random_max = args.get("random",[]) or configData["random"]
+    timing = args.get("timing",[]) or configData["timing"]
+    random_max = args.get("random",None) or configData["random"]
     #启动任务
     loop = asyncio.get_event_loop()
     if looping:
