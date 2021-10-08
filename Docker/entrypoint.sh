@@ -30,8 +30,8 @@ done
 
 # 下载程序
 function download(){
-  wget -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
-  [ "$?" != 0 ] && return
+  wget -q -O /tmp/BiliExp.zip https://archive.fastgit.org/MaxSecurity/BiliExper/archive/master.zip
+  [ "$?" != 0 ] && echo "Update/Download BiliExp error!" && return
   unzip /tmp/BiliExp.zip -d /tmp > /dev/null
   rm /tmp/BiliExp.zip
   [ -d /tmp/BiliExp ] && rm -rf /tmp/BiliExp
