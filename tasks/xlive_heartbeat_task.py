@@ -39,9 +39,9 @@ async def get_rooms(biliapi: asyncbili) -> Awaitable[List[int]]:
             break
         else:
             if ret["code"] == 0:
-                if not ret["data"]["fansMedalList"]:
+                if not ret["data"]["items"]:
                     break
-                for medal in ret["data"]["fansMedalList"]:
+                for medal in ret["data"]["items"]:
                     if 'roomid' in medal:
                         result.append(medal["roomid"])
             else:
