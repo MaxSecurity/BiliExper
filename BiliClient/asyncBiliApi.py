@@ -537,7 +537,7 @@ class asyncBiliApi(object):
         page int 页码
         pageSize int 字体颜色
         '''
-        url = f'https://api.live.bilibili.com/fans_medal/v5/live_fans_medal/iApiMedal?page={page}&pageSize={pageSize}'
+        url = f'https://api.live.bilibili.com/xlive/app-ucenter/v1/user/GetMyMedals?page={page}&page_size={pageSize}'
         async with self._session.get(url, verify_ssl=False) as r:
             return await r.json()
 
