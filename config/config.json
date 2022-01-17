@@ -259,7 +259,8 @@
         "cookieDatas": {        // cookie获取方式见项目说明
             "SESSDATA": "xxxxx",
             "bili_jct": "xxxxx",
-            "DedeUserID": "xxxxx"
+            "DedeUserID": "xxxxx",
+            "LIVE_BUVID": "xxxxx"
         },
         "show_name": "", /* 昵称，用于日志，消息推送，填空则默认使用账号昵称，在actions上不想显示真实昵称时使用
         /* 下面tasks参数与最上面default参数作用相同，但优先级更高，用于定制每个账号的参数，
@@ -270,7 +271,8 @@
         "cookieDatas": {
             "SESSDATA": "4a5f1c63%2C1785313721%2Cdf9fc*a1",
             "bili_jct": "cf28ba45824d443646907a5c4da8cf1",
-            "DedeUserID": "914624742"
+            "DedeUserID": "914624742",
+            "LIVE_BUVID": "xxxxx"
         },
         "show_name": "账号2",
         "tasks": {
