@@ -1266,7 +1266,7 @@ class asyncBiliApi(object):
         sid str 活动的id
         action_type int 操作类型
         '''
-        url = 'https://api.bilibili.com/x/activity/lottery/addtimes'
+        url = 'https://api.bilibili.com/x/lottery/addtimes'
         post_data = {
             "sid": sid,
             "action_type": action_type,
@@ -1284,7 +1284,7 @@ class asyncBiliApi(object):
         sid str 活动的id
         type int 操作类型
         '''
-        url = 'https://api.bilibili.com/x/activity/lottery/do'
+        url = 'https://api.bilibili.com/x/lottery/do'
         post_data = {
             "sid": sid,
             "type": type,
@@ -1300,7 +1300,7 @@ class asyncBiliApi(object):
         获取B站活动次数
         sid str 活动的id
         '''
-        url = f'https://api.bilibili.com/x/activity/lottery/mytimes?sid={sid}'
+        url = f'https://api.bilibili.com/x/lottery/mytimes?sid={sid}'
         async with self._session.get(url, verify_ssl=False) as r:
             return await r.json()
 
