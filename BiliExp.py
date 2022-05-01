@@ -143,6 +143,13 @@ async def run_user_tasks(user: dict,           #用户配置
         if task_array:
             await asyncio.wait(task_array)        #异步等待所有任务完成
 
+def _debug(task_name, configData):
+    if not task_name:
+        return
+    elif task_name not in configData['default']:
+        logging.error(f'没有此任务：{task_name}')
+    else:
+        configData['default'] = {task_name:configData['default'][task_name]}
 
 def main(args,*kwargs):
     try:
@@ -165,7 +172,8 @@ def main(args,*kwargs):
 
     for i in range(len(configData["timing"])):
         configData["timing"][i]=convertTimeString(configData["timing"][i])
-    
+    _debug(args.get('debug'), configData)
+
     looping = args.get("looping",None) or configData["looping"]
     timing = args.get("timing",[]) or configData["timing"]
     random_max = args.get("random",None) or configData["random"]
@@ -252,6 +260,10 @@ if __name__=="__main__":
         action='version',
         version='%(prog)s {version}'.format(version=main_version_str),
         help="版本号"
+    )
+    parser.add_argument(
+        '--debug',
+        help="--debug TASK_FILE_NAME 调试单个 task",
     )
 
     args = parser.parse_args()
