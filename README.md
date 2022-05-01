@@ -111,6 +111,7 @@ Please be sure to abide by the Github terms of service. Don’t abuse the Action
 - [使用说明(专栏、动态、视频和音频的发表,面向开发者)](/机器人up主#python实现B站发布专栏动态视频和音频的方法)
 - [欢迎打赏](#打赏)
 - [获得B站账户cookies方法](#获得cookies方法)
+- [debug选项](#debug选项)
 - [一些实用的B站PC浏览器辅助小脚本](/browser_assist#这里是一些用于b站的浏览器辅助脚本)
   - [使用方式(仅适用pc浏览器)](/browser_assist#使用方式)
   - [脚本](/browser_assist#脚本列表)
@@ -436,3 +437,8 @@ B站操作需要的cookie数据可以按照以下方式获取
 浏览器打开B站主页--》按F12打开开发者工具--》application--》cookies
 <div align="center"><img src="https://s1.ax1x.com/2020/09/23/wjM09e.png" width="800" height="450" title="获取cookies示例"></div>
 
+#### debug选项
+调试单个 task
+```bash
+python BiliExp.py --debug activity_task
+```
