@@ -1,9 +1,5 @@
 [
 	{
-		"name": "423漫画节",
-		"sid": "newLottery_8e69704b-baed-11ec-9251-a4ae12675bc2"
-	},
-	{
 		"name": "和平精英周年庆征稿活动 6.13",
 		"sid": "newLottery_f561eb2b-c477-11ec-9251-a4ae12675bc2"
 	},
@@ -14,5 +10,17 @@
 	{
 		"name": "生活改造计划·第三期 6.30",
 		"sid": "newLottery_92ce3414-bfaa-11ec-9251-a4ae12675bc2"
+	},
+	{
+		"name": "B站脱单计划 8.6",
+		"sid": "newLottery_3ead8978-cedb-11ec-9251-a4ae12675bc2"
+	},
+	{
+		"name": "星动安利大作战 7.1",
+		"sid": "newLottery_209543a6-cc8c-11ec-9251-a4ae12675bc2"
+	},
+	{
+		"name": "2022Vsinger创作激励计划 第二期 8.1",
+		"sid": "newLottery_4e61a523-cf67-11ec-9251-a4ae12675bc2"
 	}
 ]
