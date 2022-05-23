@@ -28,7 +28,7 @@ async def coin_task(biliapi: asyncbili,
         webhook.addMsg('msg_simple', f'{biliapi.name}:投币失败\n')
         return
 
-    coin_exp_num = (target * 10 - reward["coins_av"]) // 10
+    coin_exp_num = (target * 10 - reward["coins"]) // 10
     toubi_num = coin_exp_num if coin_num > coin_exp_num else coin_num
     toubi_num = int(toubi_num)
     
