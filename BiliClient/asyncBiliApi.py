@@ -389,7 +389,7 @@ class asyncBiliApi(object):
 
     async def getReward(self) -> Awaitable[Dict[str, Any]]:
         '''取B站经验信息'''
-        url = "https://account.bilibili.com/home/reward"
+        url = "https://api.bilibili.com/x/member/web/exp/reward"
         async with self._session.get(url, verify_ssl=False) as r:
             return await r.json()
     
